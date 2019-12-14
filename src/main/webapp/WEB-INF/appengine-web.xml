@@ -3,7 +3,6 @@
     <runtime>java8</runtime>
     <application>trevorism-testing</application>
     <version>0-0-1</version>
-    <service>testing</service>
     <threadsafe>true</threadsafe>
     <system-properties>
         <property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
