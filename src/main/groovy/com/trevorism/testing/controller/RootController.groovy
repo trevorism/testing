@@ -1,4 +1,4 @@
-package com.trevorism.gcloud.webapi.controller
+package com.trevorism.testing.controller
 
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -15,9 +15,9 @@ import javax.ws.rs.core.Response
 @Api("Root Operations")
 @SwaggerDefinition(
         info = @Info(
-                description = "API",
+                description = "Testing API",
                 version = "1",
-                title = "API",
+                title = "Testing API",
                 contact = @Contact(name = "Trevor Brooks", url = "https://www.trevorism.com")
         )
 )
