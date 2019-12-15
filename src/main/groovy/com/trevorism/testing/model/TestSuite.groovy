@@ -1,6 +1,6 @@
 package com.trevorism.testing.model
 
-class TestSuite implements HasTests{
+class TestSuite {
 
     enum TestSuiteType {
         JUNIT,
@@ -13,5 +13,5 @@ class TestSuite implements HasTests{
     String name
     TestSuiteType type
     String location
-    List<HasTests> tests
+    List<Test> tests
 }

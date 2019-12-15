@@ -1,17 +1,10 @@
 package com.trevorism.testing.controller
 
-import com.trevorism.testing.model.HasTests
-import com.trevorism.testing.model.TestCollection
-import com.trevorism.testing.model.TestMetadata
+import com.trevorism.testing.model.TestSuite
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 
-import javax.ws.rs.Consumes
-import javax.ws.rs.GET
-import javax.ws.rs.POST
-import javax.ws.rs.Path
-import javax.ws.rs.PathParam
-import javax.ws.rs.Produces
+import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 
 @Api("Test Collection Operations")
@@ -22,7 +15,7 @@ class TestCollectionController {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    TestCollection createCollection(TestCollection collection) {
+    TestSuite createCollection(TestSuite collection) {
         return null
     }
 
@@ -31,14 +24,14 @@ class TestCollectionController {
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    TestCollection createCollection(@PathParam("id") String collectionId, HasTests collection) {
+    TestSuite addToCollection(@PathParam("id") String collectionId, TestSuite collection) {
         return null
     }
 
     @ApiOperation(value = "Get a list of all collections")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    List<TestCollection> list() {
+    List<TestSuite> list() {
         return null
     }
 
@@ -46,7 +39,7 @@ class TestCollectionController {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    TestCollection get(@PathParam("id") String collectionId) {
+    TestSuite get(@PathParam("id") String collectionId) {
         return null
     }
 }

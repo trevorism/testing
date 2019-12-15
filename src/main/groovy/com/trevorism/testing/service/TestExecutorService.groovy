@@ -1,13 +1,10 @@
 package com.trevorism.testing.service
 
-import com.trevorism.testing.model.HasTests
-import com.trevorism.testing.model.TestMetadata
 
-import java.util.concurrent.CompletableFuture
+import com.trevorism.testing.model.TestSuite
 
 interface TestExecutorService {
 
-    boolean executeTestSuite(HasTests tests)
-    CompletableFuture<Boolean> executeTestSuiteAsync(HasTests tests)
+    boolean executeTestSuite(TestSuite tests)
 
 }

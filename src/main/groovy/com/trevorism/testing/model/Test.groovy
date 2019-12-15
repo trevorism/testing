@@ -1,7 +1,7 @@
 package com.trevorism.testing.model
 
 
-class Test implements HasTests {
+class Test {
 
     String id
     String name

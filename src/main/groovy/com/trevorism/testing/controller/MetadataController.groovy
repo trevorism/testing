@@ -1,6 +1,5 @@
 package com.trevorism.testing.controller
 
-import com.trevorism.testing.model.HasTests
 import com.trevorism.testing.model.TestMetadata
 import com.trevorism.testing.service.TestMetadataService
 import io.swagger.annotations.Api

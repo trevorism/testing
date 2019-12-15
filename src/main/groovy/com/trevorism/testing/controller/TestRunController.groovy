@@ -1,6 +1,7 @@
 package com.trevorism.testing.controller
 
-import com.trevorism.testing.model.HasTests
+import com.trevorism.testing.model.TestSuite
+import com.trevorism.testing.service.DefaultTestExecutorService
 import com.trevorism.testing.service.TestExecutorService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -14,12 +15,12 @@ import javax.ws.rs.core.MediaType
 @Path("testrun")
 class TestRunController {
 
-    TestExecutorService testService
+    TestExecutorService testService = new DefaultTestExecutorService()
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Invokes a named test suite")
-    boolean invokeTests(HasTests tests) {
+    boolean invokeTests(TestSuite tests) {
         return testService.executeTestSuite(tests)
     }
 
