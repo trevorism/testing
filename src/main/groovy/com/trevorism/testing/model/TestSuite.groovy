@@ -12,6 +12,8 @@ class TestSuite {
     String id
     String name
     TestSuiteType type
+    TestMetadata metadata
     String location
+    String version
     List<Test> tests
 }

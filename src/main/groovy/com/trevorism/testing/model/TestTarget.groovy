@@ -10,6 +10,7 @@ class TestTarget {
 
     String id
     TestTargetType type
+    String version
     String location //Most tests target a single thing
     List<String> locations //Integration tests may target multiple things
 }

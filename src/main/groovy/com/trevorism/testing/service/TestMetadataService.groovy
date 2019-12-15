@@ -5,7 +5,7 @@ import com.trevorism.testing.model.TestMetadata
 
 interface TestMetadataService {
 
-    TestMetadata lookupMetadata(String id)
+    List<TestMetadata> listMetadata()
     TestMetadata getMetadata(String id)
     TestMetadata saveMetadata(TestMetadata metadata)
     TestMetadata removeMetadata(String id)

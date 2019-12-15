@@ -8,3 +8,5 @@
 
 Webapp for managing and invoking tests on the trevorism platform
 
+Deployed to https://testing.trevorism.com
+

@@ -1,6 +1,8 @@
 package com.trevorism.testing.controller
 
 import com.trevorism.testing.model.TestSuite
+import com.trevorism.testing.service.DefaultTestSuiteService
+import com.trevorism.testing.service.TestSuiteService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 
@@ -11,28 +13,21 @@ import javax.ws.rs.core.MediaType
 @Path("collection")
 class TestCollectionController {
 
+    TestSuiteService service = new DefaultTestSuiteService()
+
     @ApiOperation(value = "Creates a new TestCollection")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     TestSuite createCollection(TestSuite collection) {
-        return null
-    }
-
-    @ApiOperation(value = "Adds a Test, TestSuite or TestCollection to a TestCollection, identified by ID")
-    @POST
-    @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    TestSuite addToCollection(@PathParam("id") String collectionId, TestSuite collection) {
-        return null
+        service.createCollection(collection)
     }
 
     @ApiOperation(value = "Get a list of all collections")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     List<TestSuite> list() {
-        return null
+        service.list()
     }
 
     @ApiOperation(value = "Gets a test collection by id")
@@ -40,6 +35,14 @@ class TestCollectionController {
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     TestSuite get(@PathParam("id") String collectionId) {
-        return null
+        service.get(collectionId)
+    }
+
+    @ApiOperation(value = "Gets a test collection by id")
+    @DELETE
+    @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    TestSuite delete(@PathParam("id") String collectionId) {
+        service.delete(collectionId)
     }
 }
