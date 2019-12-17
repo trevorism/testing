@@ -17,7 +17,7 @@ class TestSuite {
 
     String id
     String name
-    TestSuiteType type
+    String testSuiteType
     String location
     String version
 }
