@@ -50,7 +50,6 @@ dependencies {
     implementation 'com.trevorism:secure-utils:1.0.2'
     implementation 'com.trevorism:datastore-client:1.2.0'
 
-
     acceptanceImplementation 'io.cucumber:cucumber-groovy:4.7.1'
     acceptanceImplementation 'com.trevorism:http-utils:1.0.2'
     acceptanceImplementation 'org.apache.httpcomponents:httpclient:4.5.10'
@@ -73,6 +72,7 @@ check {
 }
 
 task deliver {
-    dependsOn("build","appengineDeploy")
+    dependsOn("build","appengineDeploy", "acceptance")
+    acceptance.mustRunAfter("appengineDeploy")
     appengineDeploy.mustRunAfter("check")
 }
