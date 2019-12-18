@@ -16,26 +16,23 @@ class DefaultTestExecutorService implements TestExecutorService {
 
     @Override
     boolean executeTestSuite(TestSuite testSuite) {
-        switch(testSuite.type){
+        TestSuite.TestSuiteType type = testSuite.getTestSuiteType().toUpperCase() as TestSuite.TestSuiteType
+        switch(type){
             case TestSuite.TestSuiteType.JUNIT:
                 return invokeJunitTests(testSuite)
-
             case TestSuite.TestSuiteType.KARMA:
                 return invokeKarmaTests(testSuite)
-
             case TestSuite.TestSuiteType.CUCUMBER:
                 return invokeCucumberTests(testSuite)
-
             case TestSuite.TestSuiteType.WEB:
                 return invokeWebTests(testSuite)
-
         }
         return false
     }
 
     boolean invokeJunitTests(TestSuite testSuite) {
         try{
-            String jobName = parseJobNameFromGitUrl(testSuite.location)
+            String jobName = "unit-${parseJobNameFromGitUrl(testSuite.location)}"
             log.info("CInvoking job $jobName")
             postToCinvoke(jobName)
             return true
