@@ -10,3 +10,21 @@ Webapp for managing and invoking tests on the trevorism platform
 
 Deployed to https://testing.trevorism.com
 
+##Goals
+The goals of the testing platform are
+
+* Test discovery
+  * What tests exists, and where?
+* Test gaps
+  * What tests are missing? 
+  * How to add a test easily? 
+  * Where does the test belong?
+* Test result management
+  * What tests are failing?
+  * Enable/disable particular test
+* Create test collections
+  * Named collections for regression tests
+* Other
+  * What version of the source is failing?
+  * For my source code/service, what tests exist?
+  * Add another testing paradigm
