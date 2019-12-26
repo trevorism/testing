@@ -28,3 +28,4 @@ The goals of the testing platform are
   * What version of the source is failing?
   * For my source code/service, what tests exist?
   * Add another testing paradigm
+  * Add a known failing test

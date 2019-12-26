@@ -32,10 +32,7 @@ class DefaultTestExecutorService implements TestExecutorService {
 
     boolean invokeJunitTests(TestSuite testSuite) {
         try{
-            String jobName = "unit-${parseJobNameFromGitUrl(testSuite.location)}"
-            log.info("CInvoking job $jobName")
-            postToCinvoke(jobName)
-            return true
+            return invokeTestJob("unit", testSuite)
         }catch(Exception e) {
             log.warning("Exception invoking job ${e.message}")
             return false
@@ -43,15 +40,17 @@ class DefaultTestExecutorService implements TestExecutorService {
     }
 
     boolean invokeKarmaTests(TestSuite testSuite) {
-        invokeJunitTests(testSuite)
+        try{
+            return invokeTestJob("karma", testSuite)
+        }catch(Exception e) {
+            log.warning("Exception invoking job ${e.message}")
+            return false
+        }
     }
 
     boolean invokeCucumberTests(TestSuite testSuite) {
         try{
-            String jobName = parseJobNameFromGitUrl(testSuite.location)
-            log.info("CInvoking job acceptance-$jobName")
-            postToCinvoke("acceptance-$jobName")
-            return true
+            return invokeTestJob("acceptance", testSuite)
         }catch(Exception e) {
             log.warning("Exception invoking job ${e.message}")
             return false
@@ -80,5 +79,12 @@ class DefaultTestExecutorService implements TestExecutorService {
         String urlToPost = "http://cinvoke.datastore.trevorism.com/job/$jobName/build"
         def response = client.post(urlToPost, "{}", ["Authorization": passwordProvider.password])
         ResponseUtils.closeSilently(response)
+    }
+
+    private boolean invokeTestJob(String prefix, TestSuite testSuite) {
+        String jobName = "$prefix-${parseJobNameFromGitUrl(testSuite.location)}"
+        log.info("CInvoking job $jobName")
+        postToCinvoke(jobName)
+        return true
     }
 }
