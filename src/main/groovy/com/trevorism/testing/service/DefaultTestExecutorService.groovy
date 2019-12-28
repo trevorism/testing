@@ -1,17 +1,16 @@
 package com.trevorism.testing.service
 
-import com.trevorism.http.headers.HeadersHttpClient
-import com.trevorism.http.headers.HeadersJsonHttpClient
+import com.trevorism.event.EventProducer
+import com.trevorism.event.PingingEventProducer
 import com.trevorism.http.util.ResponseUtils
-import com.trevorism.secure.PasswordProvider
+import com.trevorism.testing.model.CinvokeJob
 import com.trevorism.testing.model.TestSuite
 
 import java.util.logging.Logger
 
 class DefaultTestExecutorService implements TestExecutorService {
 
-    HeadersHttpClient client = new HeadersJsonHttpClient()
-    PasswordProvider passwordProvider = new PasswordProvider()
+    EventProducer<CinvokeJob> eventhubProducer = new PingingEventProducer<>()
     private static final Logger log = Logger.getLogger(DefaultTestExecutorService.class.name)
 
     @Override
@@ -76,9 +75,8 @@ class DefaultTestExecutorService implements TestExecutorService {
     }
 
     private void postToCinvoke(String jobName) {
-        String urlToPost = "http://cinvoke.datastore.trevorism.com/job/$jobName/build"
-        def response = client.post(urlToPost, "{}", ["Authorization": passwordProvider.password])
-        ResponseUtils.closeSilently(response)
+        String correlationId = UUID.randomUUID().toString()
+        eventhubProducer.sendEvent("cinvoke", new CinvokeJob(jobName), correlationId)
     }
 
     private boolean invokeTestJob(String prefix, TestSuite testSuite) {

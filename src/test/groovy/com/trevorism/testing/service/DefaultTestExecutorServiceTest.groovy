@@ -12,4 +12,5 @@ class DefaultTestExecutorServiceTest {
         jobName = DefaultTestExecutorService.parseJobNameFromGitUrl("https://github.com/trevorism/predict.git")
         assert jobName == "predict"
     }
+
 }
