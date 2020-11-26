@@ -6,10 +6,10 @@ import com.trevorism.testing.model.TestSuite
 
 class DefaultTestSuiteService implements TestSuiteService{
 
-    Repository<TestSuite> testSuiteRepository = new PingingDatastoreRepository<>(TestSuite.class)
+    Repository<TestSuite> testSuiteRepository = new PingingDatastoreRepository<>(TestSuite)
 
     @Override
-    TestSuite createCollection(TestSuite collection) {
+    TestSuite create(TestSuite collection) {
         testSuiteRepository.create(collection)
     }
 
@@ -26,5 +26,10 @@ class DefaultTestSuiteService implements TestSuiteService{
     @Override
     TestSuite delete(String collectionId) {
         testSuiteRepository.delete(collectionId)
+    }
+
+    @Override
+    TestSuite update(String collectionId, TestSuite testSuite) {
+        testSuiteRepository.update(collectionId, testSuite)
     }
 }

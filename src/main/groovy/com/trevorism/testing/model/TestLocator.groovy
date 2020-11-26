@@ -1,9 +1,9 @@
 package com.trevorism.testing.model
 
-class TestSuite {
+class TestLocator {
 
-    String id
-    String name
+    List<String> ids
     String kind
     String source
+
 }

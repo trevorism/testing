@@ -5,6 +5,7 @@ import com.trevorism.event.PingingEventProducer
 import com.trevorism.http.util.ResponseUtils
 import com.trevorism.testing.model.CinvokeJob
 import com.trevorism.testing.model.TestSuite
+import com.trevorism.testing.model.TestSuiteKind
 
 import java.util.logging.Logger
 
@@ -15,16 +16,20 @@ class DefaultTestExecutorService implements TestExecutorService {
 
     @Override
     boolean executeTestSuite(TestSuite testSuite) {
-        TestSuite.TestSuiteType type = testSuite.getTestSuiteType().toUpperCase() as TestSuite.TestSuiteType
-        switch(type){
-            case TestSuite.TestSuiteType.JUNIT:
+        TestSuiteKind kind = testSuite.kind.toUpperCase() as TestSuiteKind
+        switch(kind){
+            case TestSuiteKind.JUNIT:
                 return invokeJunitTests(testSuite)
-            case TestSuite.TestSuiteType.KARMA:
+            case TestSuiteKind.KARMA:
                 return invokeKarmaTests(testSuite)
-            case TestSuite.TestSuiteType.CUCUMBER:
+            case TestSuiteKind.CUCUMBER:
                 return invokeCucumberTests(testSuite)
-            case TestSuite.TestSuiteType.WEB:
+            case TestSuiteKind.WEB:
                 return invokeWebTests(testSuite)
+            case TestSuiteKind.POWERSHELL:
+                return invokePowershellTests(testSuite)
+            case TestSuiteKind.SELENIUM:
+                return invokeSeleniumTests(testSuite)
         }
         return false
     }
@@ -56,18 +61,6 @@ class DefaultTestExecutorService implements TestExecutorService {
         }
     }
 
-    boolean invokeWebTests(TestSuite testSuite) {
-        try{
-            String responseJson = ResponseUtils.getEntity client.get(testSuite.location, ["Authorization": passwordProvider.password])
-            log.info("HTTP GET on $testSuite.location")
-            if(responseJson && responseJson != "false")
-                return true
-        }catch(Exception e) {
-            log.warning("Exception invoking job ${e.message}")
-        }
-        return false
-    }
-
     private static String parseJobNameFromGitUrl(String gitUrl) {
         int indexOfDotGit = gitUrl.indexOf(".git")
         int lengthOfPrefix = "https://github.com/trevorism/".length()
@@ -80,9 +73,24 @@ class DefaultTestExecutorService implements TestExecutorService {
     }
 
     private boolean invokeTestJob(String prefix, TestSuite testSuite) {
-        String jobName = "$prefix-${parseJobNameFromGitUrl(testSuite.location)}"
+        String jobName = "$prefix-${parseJobNameFromGitUrl(testSuite.name)}"
         log.info("CInvoking job $jobName")
         postToCinvoke(jobName)
         return true
+    }
+
+
+    boolean invokeWebTests(TestSuite testSuite) {
+        return false
+    }
+
+    private boolean invokePowershellTests(TestSuite testSuite) {
+        //Not implemented
+        false
+    }
+
+    private boolean invokeSeleniumTests(TestSuite testSuite) {
+        //Not implemented
+        false
     }
 }

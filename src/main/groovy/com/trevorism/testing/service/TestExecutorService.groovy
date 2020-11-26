@@ -5,6 +5,6 @@ import com.trevorism.testing.model.TestSuite
 
 interface TestExecutorService {
 
-    boolean executeTestSuite(TestSuite tests)
+    boolean executeTestSuite(TestSuite test)
 
 }
