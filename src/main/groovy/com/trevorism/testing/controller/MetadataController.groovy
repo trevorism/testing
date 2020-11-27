@@ -25,7 +25,7 @@ class MetadataController {
     @ApiOperation(value = "Lists all test metadata")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    TestMetadata listMetadata() {
+    List<TestMetadata> listMetadata() {
         testMetadataService.listMetadata()
     }
 

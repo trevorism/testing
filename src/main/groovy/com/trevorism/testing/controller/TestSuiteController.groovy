@@ -1,6 +1,5 @@
 package com.trevorism.testing.controller
 
-import com.trevorism.testing.model.TestMetadata
 import com.trevorism.testing.model.TestSuite
 import com.trevorism.testing.service.DefaultTestSuiteService
 import com.trevorism.testing.service.TestSuiteService

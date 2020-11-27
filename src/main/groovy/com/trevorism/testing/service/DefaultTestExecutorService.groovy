@@ -14,11 +14,15 @@ class DefaultTestExecutorService implements TestExecutorService {
     EventProducer<CinvokeJob> eventhubProducer = new PingingEventProducer<>()
     private static final Logger log = Logger.getLogger(DefaultTestExecutorService.class.name)
 
+    String getLastTestResultUrl(TestSuite testSuite) {
+        return "http://trevorism-build.eastus.cloudapp.azure.com/job/${testSuite.kind.toLowerCase()}-${testSuite.source}/"
+    }
+
     @Override
     boolean executeTestSuite(TestSuite testSuite) {
         TestSuiteKind kind = testSuite.kind.toUpperCase() as TestSuiteKind
         switch(kind){
-            case TestSuiteKind.JUNIT:
+            case TestSuiteKind.UNIT:
                 return invokeJunitTests(testSuite)
             case TestSuiteKind.KARMA:
                 return invokeKarmaTests(testSuite)
@@ -61,11 +65,6 @@ class DefaultTestExecutorService implements TestExecutorService {
         }
     }
 
-    private static String parseJobNameFromGitUrl(String gitUrl) {
-        int indexOfDotGit = gitUrl.indexOf(".git")
-        int lengthOfPrefix = "https://github.com/trevorism/".length()
-        return gitUrl[lengthOfPrefix..indexOfDotGit-1]
-    }
 
     private void postToCinvoke(String jobName) {
         String correlationId = UUID.randomUUID().toString()
@@ -73,7 +72,7 @@ class DefaultTestExecutorService implements TestExecutorService {
     }
 
     private boolean invokeTestJob(String prefix, TestSuite testSuite) {
-        String jobName = "$prefix-${parseJobNameFromGitUrl(testSuite.name)}"
+        String jobName = "$prefix-${testSuite.source}"
         log.info("CInvoking job $jobName")
         postToCinvoke(jobName)
         return true
@@ -93,4 +92,5 @@ class DefaultTestExecutorService implements TestExecutorService {
         //Not implemented
         false
     }
+
 }

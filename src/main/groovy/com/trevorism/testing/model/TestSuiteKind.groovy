@@ -3,8 +3,8 @@ package com.trevorism.testing.model
 import com.fasterxml.jackson.annotation.JsonProperty
 
 enum TestSuiteKind {
-    @JsonProperty("junit")
-    JUNIT,
+    @JsonProperty("unit")
+    UNIT,
     @JsonProperty("karma")
     KARMA,
     @JsonProperty("cucumber")
