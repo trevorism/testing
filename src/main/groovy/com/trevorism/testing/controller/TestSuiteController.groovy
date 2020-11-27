@@ -1,7 +1,10 @@
 package com.trevorism.testing.controller
 
 import com.trevorism.testing.model.TestSuite
+import com.trevorism.testing.model.TestSuiteDetails
+import com.trevorism.testing.service.DefaultTestExecutorService
 import com.trevorism.testing.service.DefaultTestSuiteService
+import com.trevorism.testing.service.TestExecutorService
 import com.trevorism.testing.service.TestSuiteService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -21,6 +24,7 @@ import javax.ws.rs.core.MediaType
 class TestSuiteController {
 
     TestSuiteService testSuiteService = new DefaultTestSuiteService()
+    TestExecutorService testExecutorService = new DefaultTestExecutorService()
 
     @ApiOperation(value = "Creates a new test suite")
     @POST
@@ -43,6 +47,24 @@ class TestSuiteController {
     @Produces(MediaType.APPLICATION_JSON)
     TestSuite getTestSuite(@PathParam("id") String id) {
         testSuiteService.get(id)
+    }
+
+    @ApiOperation(value = "Invoke the test suite")
+    @POST
+    @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    TestSuiteDetails invokeTestSuite(@PathParam("id") String id) {
+        TestSuite testSuite = testSuiteService.get(id)
+        testExecutorService.executeTestSuite(testSuite)
+        getTestSuiteDetails(id)
+    }
+
+    @ApiOperation(value = "Gets test suite details")
+    @GET
+    @Path("{id}/detail")
+    @Produces(MediaType.APPLICATION_JSON)
+    TestSuiteDetails getTestSuiteDetails(@PathParam("id") String id) {
+        testSuiteService.getSuiteDetails(id)
     }
 
     @ApiOperation(value = "Remove registered test suite")

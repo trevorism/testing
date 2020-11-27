@@ -6,10 +6,4 @@ class TestMetadata {
     boolean disabled
     boolean shouldFail
 
-    //Scheduling
-    String repeatFrequency
-    Date startDate
-
-    //notifications
-    boolean alertOnFailure
 }

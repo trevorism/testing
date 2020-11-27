@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
 enum TestSuiteKind {
     @JsonProperty("unit")
     UNIT,
-    @JsonProperty("karma")
-    KARMA,
+    @JsonProperty("javascript")
+    JAVASCRIPT,
     @JsonProperty("cucumber")
     CUCUMBER,
     @JsonProperty("web")

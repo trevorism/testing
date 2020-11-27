@@ -1,7 +1,6 @@
 package com.trevorism.testing.service
 
 import com.trevorism.testing.model.TestMetadata
-import com.trevorism.testing.model.TestSuiteKind
 
 interface TestMetadataService {
 
