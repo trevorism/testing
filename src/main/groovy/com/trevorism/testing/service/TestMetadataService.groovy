@@ -12,6 +12,4 @@ interface TestMetadataService {
     TestMetadata removeMetadata(String id)
     TestMetadata updateMetadata(String id, TestMetadata metadata)
 
-    TestMetadata findOrCreate(String serviceName, TestSuiteKind testSuiteKind)
-
 }

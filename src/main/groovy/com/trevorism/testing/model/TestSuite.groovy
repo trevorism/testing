@@ -7,5 +7,7 @@ class TestSuite {
     String kind
     String source
 
-
+    String invocationUrl
+    String invocationHttpMethod
+    String invocationBody
 }

@@ -12,11 +12,11 @@ def pingContent
 
 Given(/the testing application is alive/) {  ->
     try{
-        new URL("http://testing.trevorism.com/ping").text
+        new URL("http://testing.trevorism.com/api/ping").text
     }
     catch (Exception ignored){
         Thread.sleep(10000)
-        new URL("http://testing.trevorism.com/ping").text
+        new URL("http://testing.trevorism.com/api/ping").text
     }
 }
 
