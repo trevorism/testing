@@ -27,6 +27,6 @@ class ExecuteTestStrategyFactory {
     }
 
     private static String createCinvokeUrl(String prefix, TestSuite it) {
-        return "http://cinvoke.datastore.trevorism.com/job/${prefix}-${it.source}/build"
+        return "https://cinvoke.datastore.trevorism.com/job/${prefix}-${it.source}/build"
     }
 }
