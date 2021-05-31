@@ -12,6 +12,7 @@ class TestSuiteKindTest {
         assert TestSuiteKind.valueOf("web".toUpperCase())
         assert TestSuiteKind.valueOf("powershell".toUpperCase())
         assert TestSuiteKind.valueOf("selenium".toUpperCase())
+        throw new RuntimeException()
     }
 
     @Test
