@@ -65,7 +65,6 @@ class DefaultTestSuiteService implements TestSuiteService {
         String testResultUrl = buildTestResultUrl(testSuite)
         String codeUnderTestUrl = "https://github.com/trevorism/${testSuite.source}"
         new TestSuiteDetails(testSuiteId: testSuite.id, testCodeUrl: testCodeUrl, testResultUrl: testResultUrl, lastRunSuccess: false, codeUnderTestUrls: [codeUnderTestUrl])
-
     }
 
     private static String buildTestCodeUrl(TestSuite testSuite) {
@@ -89,7 +88,7 @@ class DefaultTestSuiteService implements TestSuiteService {
         TestSuiteKind kind = TestSuiteKind.valueOf(testSuite.kind.toUpperCase())
         switch (kind) {
             case TestSuiteKind.UNIT:
-                return "http://trevorism-build.eastus.cloudapp.azure.com/job/unit-${testSuite.source}/Unit_20tests"
+                return "https://trevorism-build.eastus.cloudapp.azure.com/job/unit-${testSuite.source}/Unit_20tests"
             case TestSuiteKind.JAVASCRIPT:
             case TestSuiteKind.CUCUMBER:
             case TestSuiteKind.WEB:

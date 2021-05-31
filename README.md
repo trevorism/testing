@@ -17,6 +17,8 @@ The goals of the testing platform are
 
 * Test discovery
   * What tests exists, and where?
+* Test execution
+  * Run tests on demand or on a schedule
 * Test gaps
   * What tests are missing? 
   * How to add a test easily? 
