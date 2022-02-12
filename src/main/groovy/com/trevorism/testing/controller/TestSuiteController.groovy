@@ -84,4 +84,11 @@ class TestSuiteController {
         testSuiteService.update(id, testSuite)
     }
 
+    @ApiOperation(value = "Updates test suite details")
+    @PUT
+    @Path("{id}/detail")
+    @Produces(MediaType.APPLICATION_JSON)
+    TestSuiteDetails updateTestSuiteDetails(@PathParam("id") String id) {
+        return testSuiteService.updateDetailsFromJenkins(id)
+    }
 }
