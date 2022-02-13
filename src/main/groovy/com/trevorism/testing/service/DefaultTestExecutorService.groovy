@@ -11,6 +11,7 @@ import com.trevorism.testing.model.TestSuite
 import com.trevorism.testing.service.run.ExecuteTestStrategy
 import com.trevorism.testing.service.run.ExecuteTestStrategyFactory
 
+import java.text.SimpleDateFormat
 import java.time.Instant
 
 class DefaultTestExecutorService implements TestExecutorService {
@@ -27,11 +28,12 @@ class DefaultTestExecutorService implements TestExecutorService {
         return success
     }
 
-
     void scheduleDetailsUpdate(TestSuite testSuite) {
         ScheduledTaskFactory factory = new DefaultScheduledTaskFactory()
+        Date tenMinutesFromNow = Instant.now().plus(60 * 10).toDate()
+        String tenMinutesString = new SimpleDateFormat("yyyyMMddHHmmss").format(tenMinutesFromNow)
         EndpointSpec endpointSpec = new EndpointSpec("https://testing.trevorism.com/api/suite/$testSuite.id/detail", HttpMethod.PUT, "{}")
-        ScheduledTask st = factory.createImmediateTask("detailupdate-${testSuite.id}", Instant.now().plus(60 * 10).toDate(), endpointSpec)
+        ScheduledTask st = factory.createImmediateTask("detailupdate-${tenMinutesString}", tenMinutesFromNow, endpointSpec)
         ScheduleService service = new DefaultScheduleService()
         service.create(st)
     }
