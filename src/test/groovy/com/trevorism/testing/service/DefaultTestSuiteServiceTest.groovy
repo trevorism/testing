@@ -1,5 +1,6 @@
 package com.trevorism.testing.service
 
+import com.trevorism.testing.model.TestSuite
 import org.junit.Test
 
 class DefaultTestSuiteServiceTest {
@@ -30,7 +31,9 @@ class DefaultTestSuiteServiceTest {
     @Test
     void testGetJenkinsLastRunInfo(){
         DefaultTestSuiteService service = new DefaultTestSuiteService()
-        println service.updateDetailsFromJenkins("4854491161559040")
+        TestSuite suite = service.get("5069459240779776")
+        TestExecutorService testExecutorService = new DefaultTestExecutorService()
+        testExecutorService.executeTestSuite(suite)
 
     }
 }

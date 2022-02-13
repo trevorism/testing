@@ -18,8 +18,8 @@ import java.util.logging.Logger
 class DefaultTestSuiteService implements TestSuiteService {
 
     private static final Logger log = Logger.getLogger(DefaultTestSuiteService.class.name)
-    Repository<TestSuite> testSuiteRepository = new FastDatastoreRepository<>(TestSuite)
-    Repository<TestSuiteDetails> testSuiteDetailsRepository = new FastDatastoreRepository<>(TestSuiteDetails)
+    private Repository<TestSuite> testSuiteRepository = new PingingDatastoreRepository<>(TestSuite)
+    private Repository<TestSuiteDetails> testSuiteDetailsRepository = new PingingDatastoreRepository<>(TestSuiteDetails)
     Gson gson = new Gson()
     HttpClient client = new JsonHttpClient()
 
