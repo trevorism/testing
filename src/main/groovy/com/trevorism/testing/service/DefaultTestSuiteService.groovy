@@ -8,7 +8,9 @@ import com.trevorism.data.model.filtering.FilterBuilder
 import com.trevorism.data.model.filtering.SimpleFilter
 import com.trevorism.http.HttpClient
 import com.trevorism.http.JsonHttpClient
+import com.trevorism.testing.controller.ErrorsController
 import com.trevorism.testing.model.JenkinsRunResult
+import com.trevorism.testing.model.TestError
 import com.trevorism.testing.model.TestSuite
 import com.trevorism.testing.model.TestSuiteDetails
 import com.trevorism.testing.model.TestSuiteKind
@@ -64,7 +66,13 @@ class DefaultTestSuiteService implements TestSuiteService {
         TestSuite testSuite = get(testSuiteId)
         TestSuiteDetails foundDetails = getSuiteDetails(testSuiteId)
         try{
-            return getJenkinsLastRunInfo(testSuite, foundDetails)
+            TestSuiteDetails details = getJenkinsLastRunInfo(testSuite, foundDetails)
+
+            if(!details.lastRunSuccess){
+                new ErrorsController().createError(new TestError(source: testSuite.source, message: "Test run unsuccessful for test suite id: ${details.testSuiteId}", date: new Date()))
+            }
+
+            return details
         }catch(Exception e){
             log.warning("Unable to update test suite details: ${e.message}")
         }

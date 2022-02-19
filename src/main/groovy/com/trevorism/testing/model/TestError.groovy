@@ -1,6 +1,6 @@
 package com.trevorism.testing.model
 
-class Error {
+class TestError {
 
     String id
     String source

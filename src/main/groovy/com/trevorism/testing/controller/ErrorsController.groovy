@@ -6,7 +6,7 @@ import com.trevorism.data.model.sorting.Sort
 import com.trevorism.data.model.sorting.SortBuilder
 import com.trevorism.event.EventProducer
 import com.trevorism.event.PingingEventProducer
-import com.trevorism.testing.model.Error
+import com.trevorism.testing.model.TestError
 import com.trevorism.threshold.model.Alert
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -26,12 +26,12 @@ import java.time.temporal.ChronoUnit
 @Path("error")
 class ErrorsController {
 
-    private Repository<Error> errorRepository = new PingingDatastoreRepository<>(Error)
+    private Repository<TestError> errorRepository = new PingingDatastoreRepository<>(TestError)
 
     @ApiOperation(value = "Lists all errors")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    List<Error> getLastErrors() {
+    List<TestError> getLastErrors() {
         errorRepository.sort(new SortBuilder().addSort(new Sort("date",true)).build())
     }
 
@@ -39,7 +39,7 @@ class ErrorsController {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    Error getError(@PathParam("id") String id) {
+    TestError getError(@PathParam("id") String id) {
         errorRepository.get(id)
     }
 
@@ -47,7 +47,7 @@ class ErrorsController {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    Error createError(Error error) {
+    TestError createError(TestError error) {
         errorRepository.create(error)
     }
 
@@ -55,7 +55,7 @@ class ErrorsController {
     @DELETE
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    Error removeError(@PathParam("id") String id) {
+    TestError removeError(@PathParam("id") String id) {
         errorRepository.delete(id)
     }
 
