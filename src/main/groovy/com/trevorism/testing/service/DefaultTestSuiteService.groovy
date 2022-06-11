@@ -1,16 +1,13 @@
 package com.trevorism.testing.service
 
 import com.google.gson.Gson
-import com.trevorism.data.FastDatastoreRepository
 import com.trevorism.data.PingingDatastoreRepository
 import com.trevorism.data.Repository
 import com.trevorism.data.model.filtering.FilterBuilder
 import com.trevorism.data.model.filtering.SimpleFilter
 import com.trevorism.http.HttpClient
 import com.trevorism.http.JsonHttpClient
-import com.trevorism.testing.controller.ErrorsController
-import com.trevorism.testing.model.JenkinsRunResult
-import com.trevorism.testing.model.TestError
+
 import com.trevorism.testing.model.TestSuite
 import com.trevorism.testing.model.TestSuiteDetails
 import com.trevorism.testing.model.TestSuiteKind
@@ -22,9 +19,6 @@ class DefaultTestSuiteService implements TestSuiteService {
     private static final Logger log = Logger.getLogger(DefaultTestSuiteService.class.name)
     private Repository<TestSuite> testSuiteRepository = new PingingDatastoreRepository<>(TestSuite)
     private Repository<TestSuiteDetails> testSuiteDetailsRepository = new PingingDatastoreRepository<>(TestSuiteDetails)
-    Gson gson = new Gson()
-    HttpClient client = new JsonHttpClient()
-
 
     @Override
     TestSuite create(TestSuite testSuite) {
@@ -60,32 +54,6 @@ class DefaultTestSuiteService implements TestSuiteService {
         if(!list)
             return null
         return list[0]
-    }
-
-    TestSuiteDetails updateDetailsFromJenkins(String testSuiteId) {
-        TestSuite testSuite = get(testSuiteId)
-        TestSuiteDetails foundDetails = getSuiteDetails(testSuiteId)
-        try{
-            TestSuiteDetails details = getJenkinsLastRunInfo(testSuite, foundDetails)
-
-            if(!details.lastRunSuccess){
-                new ErrorsController().createError(new TestError(source: testSuite.source, message: "Test run unsuccessful for test suite id: ${details.testSuiteId}", date: new Date()))
-            }
-
-            return details
-        }catch(Exception e){
-            log.warning("Unable to update test suite details: ${e.message}")
-        }
-        return foundDetails
-    }
-
-    private TestSuiteDetails getJenkinsLastRunInfo(TestSuite testSuite, TestSuiteDetails foundDetails) {
-        String jenkinsName = getJenkinsName(testSuite)
-        String json = client.get("https://trevorism-build.eastus.cloudapp.azure.com/job/$jenkinsName/lastBuild/api/json")
-        JenkinsRunResult result = gson.fromJson(json, JenkinsRunResult)
-        foundDetails.lastRunDate = new Date(result.timestamp)
-        foundDetails.lastRunSuccess = result.result == "SUCCESS"
-        return testSuiteDetailsRepository.update(foundDetails.id, foundDetails)
     }
 
     private static void validateInput(TestSuite testSuite) {
@@ -141,13 +109,4 @@ class DefaultTestSuiteService implements TestSuiteService {
         return null
     }
 
-
-    private String getJenkinsName(TestSuite testSuite) {
-        switch (testSuite.kind){
-            case "unit": return "unit-${testSuite.source}"
-            case "cucumber": return "acceptance-${testSuite.source}"
-            case "javascript": return "karma-${testSuite.source}"
-            default: throw new RuntimeException("Unable to compute test suite name")
-        }
-    }
 }

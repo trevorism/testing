@@ -71,7 +71,7 @@ class TestSuiteController {
     @DELETE
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    TestSuite removeMetadata(@PathParam("id") String id) {
+    TestSuite removeTestSuite(@PathParam("id") String id) {
         testSuiteService.delete(id)
     }
 
@@ -80,15 +80,8 @@ class TestSuiteController {
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    TestSuite updateMetadata(@PathParam("id") String id, TestSuite testSuite) {
+    TestSuite updateTestSuite(@PathParam("id") String id, TestSuite testSuite) {
         testSuiteService.update(id, testSuite)
     }
 
-    @ApiOperation(value = "Updates test suite details")
-    @PUT
-    @Path("{id}/detail")
-    @Produces(MediaType.APPLICATION_JSON)
-    TestSuiteDetails updateTestSuiteDetails(@PathParam("id") String id) {
-        return testSuiteService.updateDetailsFromJenkins(id)
-    }
 }

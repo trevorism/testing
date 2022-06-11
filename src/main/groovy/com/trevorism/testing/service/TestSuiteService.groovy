@@ -12,5 +12,4 @@ interface TestSuiteService {
     TestSuite update(String id, TestSuite testSuite)
 
     TestSuiteDetails getSuiteDetails(String testSuiteId)
-    TestSuiteDetails updateDetailsFromJenkins(String testSuiteId)
 }
