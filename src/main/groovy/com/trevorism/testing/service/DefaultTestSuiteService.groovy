@@ -1,12 +1,9 @@
 package com.trevorism.testing.service
 
-import com.google.gson.Gson
 import com.trevorism.data.PingingDatastoreRepository
 import com.trevorism.data.Repository
 import com.trevorism.data.model.filtering.FilterBuilder
 import com.trevorism.data.model.filtering.SimpleFilter
-import com.trevorism.http.HttpClient
-import com.trevorism.http.JsonHttpClient
 
 import com.trevorism.testing.model.TestSuite
 import com.trevorism.testing.model.TestSuiteDetails
