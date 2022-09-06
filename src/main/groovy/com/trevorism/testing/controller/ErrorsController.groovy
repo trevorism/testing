@@ -48,6 +48,8 @@ class ErrorsController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     TestError createError(TestError error) {
+        if(error.date == null)
+            error.date = new Date()
         errorRepository.create(error)
     }
 
