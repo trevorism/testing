@@ -1,13 +1,13 @@
 package com.trevorism.testing.controller
 
+import com.trevorism.AlertClient
 import com.trevorism.data.PingingDatastoreRepository
 import com.trevorism.data.Repository
 import com.trevorism.data.model.sorting.Sort
 import com.trevorism.data.model.sorting.SortBuilder
-import com.trevorism.event.EventProducer
-import com.trevorism.event.PingingEventProducer
+import com.trevorism.model.Alert
 import com.trevorism.testing.model.TestError
-import com.trevorism.threshold.model.Alert
+
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 
@@ -61,7 +61,6 @@ class ErrorsController {
         errorRepository.delete(id)
     }
 
-
     @ApiOperation(value = "Sends an alert if there are any active errors")
     @GET
     @Path("alert")
@@ -69,8 +68,9 @@ class ErrorsController {
     boolean checkForErrors() {
         def list = errorRepository.list()
         if(list){
-            EventProducer<Alert> producer = new PingingEventProducer<>()
-            producer.sendEvent("alert", new Alert(subject: "Error Report", body: "There are errors to resolve, https://testing.trevorism.com/api/error"))
+            AlertClient alertClient = new AlertClient()
+            alertClient.sendAlert(new Alert(subject: "Error Report",
+                    body: "There are errors to resolve, https://testing.trevorism.com/api/error"))
             return true
         }
         return false

@@ -1,0 +1,34 @@
+name: Deploy tested project to GCP
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  call-build:
+    uses: trevorism/actions-workflows/.github/workflows/build.yml@master
+
+  call-deploy:
+    uses: trevorism/actions-workflows/.github/workflows/deploy.yml@master
+    if: success() || failure()
+    needs: [call-build, call-accept-before]
+    with:
+      gcp_project: 'trevorism-testing'
+      gcp_project_id: '729203316942'
+      version: '0-4-0'
+    secrets:
+      CLIENT_ID: ${{ secrets.CLIENT_ID }}
+      CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+      SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+      TOKEN: ${{ secrets.TOKEN }}
+
+  call-accept-before:
+    uses: trevorism/actions-workflows/.github/workflows/accept.yml@master
+    secrets:
+      TOKEN: ${{ secrets.TOKEN }}
+
+  call-accept-after:
+    uses: trevorism/actions-workflows/.github/workflows/accept.yml@master
+    needs: call-deploy
+    secrets:
+      TOKEN: ${{ secrets.TOKEN }}

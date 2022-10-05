@@ -1,14 +1,12 @@
 # testing 
-
-![Jenkins](https://img.shields.io/jenkins/build/http/trevorism-build.eastus.cloudapp.azure.com/testing)
-![Jenkins Coverage](https://img.shields.io/jenkins/coverage/jacoco/http/trevorism-build.eastus.cloudapp.azure.com/testing)
+![Build](https://github.com/trevorism/testing/actions/workflows/deploy.yml/badge.svg)
 ![GitHub last commit](https://img.shields.io/github/last-commit/trevorism/testing)
 ![GitHub language count](https://img.shields.io/github/languages/count/trevorism/testing)
 ![GitHub top language](https://img.shields.io/github/languages/top/trevorism/testing)
 
 Webapp for managing and invoking tests on the trevorism platform
 
-Current version: 0.3.0
+Current version: 0.4.0
 
 Deployed to https://testing.trevorism.com
 

@@ -11,5 +11,4 @@ class TestSuiteDetails {
     List<String> codeUnderTestUrls = []
     Map<String, TestMetadata> testMetadata = [:]
 
-
 }
