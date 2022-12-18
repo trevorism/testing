@@ -3,6 +3,7 @@ name: Deploy tested project to GCP
 on:
   push:
     branches: [ master ]
+  workflow_dispatch:
 
 jobs:
   call-build:
@@ -20,15 +21,11 @@ jobs:
       CLIENT_ID: ${{ secrets.CLIENT_ID }}
       CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
       SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-      TOKEN: ${{ secrets.TOKEN }}
+
 
   call-accept-before:
     uses: trevorism/actions-workflows/.github/workflows/accept.yml@master
-    secrets:
-      TOKEN: ${{ secrets.TOKEN }}
 
   call-accept-after:
     uses: trevorism/actions-workflows/.github/workflows/accept.yml@master
     needs: call-deploy
-    secrets:
-      TOKEN: ${{ secrets.TOKEN }}
