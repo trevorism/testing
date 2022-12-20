@@ -2,6 +2,7 @@ package com.trevorism.testing.controller
 
 import com.trevorism.secure.Roles
 import com.trevorism.secure.Secure
+import com.trevorism.testing.model.TestError
 import com.trevorism.testing.model.TestSuite
 import com.trevorism.testing.model.WorkflowRequest
 import com.trevorism.testing.model.WorkflowStatus
@@ -96,6 +97,10 @@ class TestSuiteController {
     TestSuite updateTestSuite(TestSuite testSuite) {
         WorkflowStatus status = githubClient.getWorkflowStatus(testSuite.source, new WorkflowRequest(unitTest: testSuite?.kind?.toLowerCase() == "unit"))
         TestSuite updated = testExecutorService.updateTestSuiteFromStatus(testSuite, status)
+        if(!updated.lastRunSuccess){
+            new ErrorsController().createError(new TestError(source: updated.source, message: "Failing test suite ${updated.id} - ${updated.name}", date: updated.lastRunDate))
+        }
         updateTestSuite(updated.id, updated)
+
     }
 }

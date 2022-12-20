@@ -17,6 +17,6 @@ class DefaultGithubClientTest {
     void testGetWorkflowStatus() {
         GithubClient githubClient = new DefaultGithubClient()
         githubClient.client = [get: { url -> "{}"}] as SecureHttpClient
-        assert githubClient.getWorkflowStatus("github", new WorkflowRequest(yamlName: "deploy.yml"))
+        assert githubClient.getWorkflowStatus("github", new WorkflowRequest(yamlName: "test.yml"))
     }
 }
