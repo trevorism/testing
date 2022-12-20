@@ -1,9 +1,14 @@
 package com.trevorism.testing.controller
 
+import com.trevorism.secure.Roles
+import com.trevorism.secure.Secure
 import com.trevorism.testing.model.TestSuite
-import com.trevorism.testing.model.TestSuiteDetails
+import com.trevorism.testing.model.WorkflowRequest
+import com.trevorism.testing.model.WorkflowStatus
+import com.trevorism.testing.service.DefaultGithubClient
 import com.trevorism.testing.service.DefaultTestExecutorService
 import com.trevorism.testing.service.DefaultTestSuiteService
+import com.trevorism.testing.service.GithubClient
 import com.trevorism.testing.service.TestExecutorService
 import com.trevorism.testing.service.TestSuiteService
 import io.swagger.annotations.Api
@@ -25,8 +30,10 @@ class TestSuiteController {
 
     TestSuiteService testSuiteService = new DefaultTestSuiteService()
     TestExecutorService testExecutorService = new DefaultTestExecutorService()
+    GithubClient githubClient = new DefaultGithubClient()
 
-    @ApiOperation(value = "Creates a new test suite")
+    @ApiOperation(value = "Creates a new test suite **Secure")
+    @Secure(Roles.USER)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -34,14 +41,16 @@ class TestSuiteController {
         testSuiteService.create(testSuite)
     }
 
-    @ApiOperation(value = "Lists all test suites")
+    @ApiOperation(value = "Lists all test suites **Secure")
+    @Secure(Roles.USER)
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     List<TestSuite> listAllTestSuites() {
         testSuiteService.list()
     }
 
-    @ApiOperation(value = "Gets test suites based on the service name")
+    @ApiOperation(value = "Gets test suites based on the service name **Secure")
+    @Secure(Roles.USER)
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -49,25 +58,19 @@ class TestSuiteController {
         testSuiteService.get(id)
     }
 
-    @ApiOperation(value = "Invoke the test suite")
+    @ApiOperation(value = "Invoke the test suite **Secure")
+    @Secure(Roles.USER)
     @POST
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    TestSuiteDetails invokeTestSuite(@PathParam("id") String id) {
+    TestSuite invokeTestSuite(@PathParam("id") String id) {
         TestSuite testSuite = testSuiteService.get(id)
         testExecutorService.executeTestSuite(testSuite)
-        getTestSuiteDetails(id)
+        return testSuite
     }
 
-    @ApiOperation(value = "Gets test suite details")
-    @GET
-    @Path("{id}/detail")
-    @Produces(MediaType.APPLICATION_JSON)
-    TestSuiteDetails getTestSuiteDetails(@PathParam("id") String id) {
-        testSuiteService.getSuiteDetails(id)
-    }
-
-    @ApiOperation(value = "Remove registered test suite")
+    @ApiOperation(value = "Remove registered test suite **Secure")
+    @Secure(Roles.USER)
     @DELETE
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -75,7 +78,8 @@ class TestSuiteController {
         testSuiteService.delete(id)
     }
 
-    @ApiOperation(value = "Updates registered test suite")
+    @ApiOperation(value = "Updates registered test suite **Secure")
+    @Secure(Roles.USER)
     @PUT
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -84,4 +88,14 @@ class TestSuiteController {
         testSuiteService.update(id, testSuite)
     }
 
+    @ApiOperation(value = "Updates test suite based on last execution **Secure")
+    @Secure(value = Roles.USER, allowInternal = true)
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    TestSuite updateTestSuite(TestSuite testSuite) {
+        WorkflowStatus status = githubClient.getWorkflowStatus(testSuite.source, new WorkflowRequest(unitTest: testSuite?.kind?.toLowerCase() == "unit"))
+        TestSuite updated = testExecutorService.updateTestSuiteFromStatus(testSuite, status)
+        updateTestSuite(updated.id, updated)
+    }
 }

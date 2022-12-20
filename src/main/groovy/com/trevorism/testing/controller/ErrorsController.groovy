@@ -6,6 +6,8 @@ import com.trevorism.data.Repository
 import com.trevorism.data.model.sorting.Sort
 import com.trevorism.data.model.sorting.SortBuilder
 import com.trevorism.model.Alert
+import com.trevorism.secure.Roles
+import com.trevorism.secure.Secure
 import com.trevorism.testing.model.TestError
 
 import io.swagger.annotations.Api
@@ -35,7 +37,8 @@ class ErrorsController {
         errorRepository.sort(new SortBuilder().addSort(new Sort("date",true)).build())
     }
 
-    @ApiOperation(value = "Gets error from an id")
+    @ApiOperation(value = "Gets error from an id **Secure")
+    @Secure(Roles.USER)
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -43,7 +46,8 @@ class ErrorsController {
         errorRepository.get(id)
     }
 
-    @ApiOperation(value = "Creates a new error")
+    @ApiOperation(value = "Creates a new error **Secure")
+    @Secure(Roles.USER)
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -53,7 +57,8 @@ class ErrorsController {
         errorRepository.create(error)
     }
 
-    @ApiOperation(value = "Remove an error")
+    @ApiOperation(value = "Remove an error **Secure")
+    @Secure(Roles.USER)
     @DELETE
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -61,7 +66,8 @@ class ErrorsController {
         errorRepository.delete(id)
     }
 
-    @ApiOperation(value = "Sends an alert if there are any active errors")
+    @ApiOperation(value = "Sends an alert if there are any active errors **Secure")
+    @Secure(value = Roles.USER, allowInternal = true)
     @GET
     @Path("alert")
     @Produces(MediaType.APPLICATION_JSON)
@@ -76,7 +82,8 @@ class ErrorsController {
         return false
     }
 
-    @ApiOperation(value = "")
+    @ApiOperation(value = "Cleanup week long old errors **Secure")
+    @Secure(value = Roles.USER, allowInternal = true)
     @DELETE
     @Path("scrub")
     @Produces(MediaType.APPLICATION_JSON)

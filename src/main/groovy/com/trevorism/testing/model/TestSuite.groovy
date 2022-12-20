@@ -10,4 +10,7 @@ class TestSuite {
     //Where the test suite lives
     String source
 
+    boolean lastRunSuccess
+    Date lastRunDate
+    long lastRuntimeSeconds
 }

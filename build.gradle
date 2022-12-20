@@ -54,7 +54,8 @@ dependencies {
 
     implementation 'com.trevorism:secure-http-utils:1.0.0'
     implementation 'com.trevorism:datastore-client:2.7.0'
-    implementation 'com.trevorism:reactions-client:0.2.0'
+    implementation 'com.trevorism:reactions-client:0.3.0'
+    implementation 'com.trevorism:schedule-client:0.7.0'
 
     acceptanceImplementation 'io.cucumber:cucumber-groovy:4.7.1'
 

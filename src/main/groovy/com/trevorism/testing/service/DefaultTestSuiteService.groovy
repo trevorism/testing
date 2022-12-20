@@ -2,11 +2,8 @@ package com.trevorism.testing.service
 
 import com.trevorism.data.PingingDatastoreRepository
 import com.trevorism.data.Repository
-import com.trevorism.data.model.filtering.FilterBuilder
-import com.trevorism.data.model.filtering.SimpleFilter
-
 import com.trevorism.testing.model.TestSuite
-import com.trevorism.testing.model.TestSuiteDetails
+
 import com.trevorism.testing.model.TestSuiteKind
 
 import java.util.logging.Logger
@@ -15,13 +12,12 @@ class DefaultTestSuiteService implements TestSuiteService {
 
     private static final Logger log = Logger.getLogger(DefaultTestSuiteService.class.name)
     private Repository<TestSuite> testSuiteRepository = new PingingDatastoreRepository<>(TestSuite)
-    private Repository<TestSuiteDetails> testSuiteDetailsRepository = new PingingDatastoreRepository<>(TestSuiteDetails)
+
 
     @Override
     TestSuite create(TestSuite testSuite) {
         validateInput(testSuite)
         TestSuite createdSuite = testSuiteRepository.create(testSuite)
-        testSuiteDetailsRepository.create(createInitialDetailsFromSuite(createdSuite))
         return createdSuite
     }
 
@@ -45,14 +41,6 @@ class DefaultTestSuiteService implements TestSuiteService {
         testSuiteRepository.update(id, testSuite)
     }
 
-    @Override
-    TestSuiteDetails getSuiteDetails(String testSuiteId) {
-        def list = testSuiteDetailsRepository.filter(new FilterBuilder().addFilter(new SimpleFilter("testSuiteId","=", testSuiteId)).build())
-        if(!list)
-            return null
-        return list[0]
-    }
-
     private static void validateInput(TestSuite testSuite) {
         if (!testSuite || !testSuite.name) {
             throw new RuntimeException("Invalid test suite, must have a name")
@@ -67,11 +55,6 @@ class DefaultTestSuiteService implements TestSuiteService {
         }
     }
 
-    private static TestSuiteDetails createInitialDetailsFromSuite(TestSuite testSuite) {
-        String testCodeUrl = buildTestCodeUrl(testSuite)
-        String codeUnderTestUrl = "https://github.com/trevorism/${testSuite.source}"
-        new TestSuiteDetails(testSuiteId: testSuite.id, testCodeUrl: testCodeUrl, lastRunSuccess: false, codeUnderTestUrls: [codeUnderTestUrl])
-    }
 
     private static String buildTestCodeUrl(TestSuite testSuite) {
         TestSuiteKind kind = TestSuiteKind.valueOf(testSuite.kind.toUpperCase())
