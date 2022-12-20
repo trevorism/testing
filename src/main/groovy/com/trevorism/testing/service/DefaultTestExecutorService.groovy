@@ -1,8 +1,6 @@
 package com.trevorism.testing.service
 
 import com.google.gson.Gson
-import com.trevorism.https.DefaultSecureHttpClient
-import com.trevorism.https.SecureHttpClient
 import com.trevorism.schedule.DefaultScheduleService
 import com.trevorism.schedule.ScheduleService
 import com.trevorism.schedule.factory.DefaultScheduledTaskFactory
@@ -15,8 +13,6 @@ import com.trevorism.testing.model.WorkflowRequest
 import com.trevorism.testing.model.WorkflowStatus
 
 import java.time.Instant
-import java.time.temporal.ChronoUnit
-
 
 class DefaultTestExecutorService implements TestExecutorService {
 
