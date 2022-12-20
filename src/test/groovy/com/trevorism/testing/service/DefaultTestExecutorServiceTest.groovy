@@ -27,4 +27,5 @@ class DefaultTestExecutorServiceTest {
         assert !testSuite.lastRunSuccess
         assert testSuite.lastRuntimeSeconds == 10
     }
+
 }

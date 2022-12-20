@@ -55,22 +55,4 @@ class DefaultTestSuiteService implements TestSuiteService {
         }
     }
 
-
-    private static String buildTestCodeUrl(TestSuite testSuite) {
-        TestSuiteKind kind = TestSuiteKind.valueOf(testSuite.kind.toUpperCase())
-        switch (kind) {
-            case TestSuiteKind.UNIT:
-                return "https://github.com/trevorism/${testSuite.source}/tree/master/src/test/groovy"
-            case TestSuiteKind.JAVASCRIPT:
-                return "https://github.com/trevorism/${testSuite.source}/tree/master/src/app/test"
-            case TestSuiteKind.CUCUMBER:
-                return "https://github.com/trevorism/${testSuite.source}/tree/master/src/acceptance"
-            case TestSuiteKind.WEB:
-            case TestSuiteKind.POWERSHELL:
-            case TestSuiteKind.SELENIUM:
-                return null
-        }
-        return null
-    }
-
 }

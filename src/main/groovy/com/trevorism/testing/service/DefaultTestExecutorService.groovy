@@ -1,6 +1,7 @@
 package com.trevorism.testing.service
 
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.trevorism.schedule.DefaultScheduleService
 import com.trevorism.schedule.ScheduleService
 import com.trevorism.schedule.factory.DefaultScheduledTaskFactory
@@ -17,7 +18,7 @@ import java.time.Instant
 class DefaultTestExecutorService implements TestExecutorService {
 
     public static final int CHECK_TEST_RESULTS_MINUTES = 15
-    private Gson gson = new Gson()
+    private final Gson gson = (new GsonBuilder()).setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").create()
     private GithubClient githubClient = new DefaultGithubClient()
     private ScheduleService scheduleService = new DefaultScheduleService()
 
