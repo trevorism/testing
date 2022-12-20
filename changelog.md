@@ -1,3 +1,9 @@
+# 0.6.0
+
+Remove concept of test suite details and added details into the test suite object.
+Added security to the endpoints.
+Schedule a check against github actions after test execution to update the test suite with additional data
+
 # 0.5.0
 
 Have testing invoke github actions to run tests.
