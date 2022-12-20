@@ -50,7 +50,7 @@ class DefaultTestExecutorService implements TestExecutorService {
     TestSuite updateTestSuiteFromStatus(TestSuite testSuite, WorkflowStatus workflowStatus) {
         testSuite.lastRunDate = workflowStatus.updatedAt
         testSuite.lastRunSuccess = workflowStatus.result == "success"
-        testSuite.lastRuntimeSeconds = ChronoUnit.SECONDS.between(workflowStatus.createdAt,workflowStatus.updatedAt)
+        testSuite.lastRuntimeSeconds = Math.abs(workflowStatus.createdAt.getTime() - workflowStatus.updatedAt.getTime()) / 1000
         return testSuite
     }
 
