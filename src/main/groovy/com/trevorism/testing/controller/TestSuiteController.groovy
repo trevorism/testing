@@ -60,7 +60,7 @@ class TestSuiteController {
     }
 
     @ApiOperation(value = "Invoke the test suite **Secure")
-    @Secure(Roles.USER)
+    @Secure(value = Roles.USER, allowInternal = true)
     @POST
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
