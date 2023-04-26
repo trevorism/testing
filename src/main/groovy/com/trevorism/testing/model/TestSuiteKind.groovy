@@ -13,6 +13,6 @@ enum TestSuiteKind {
     WEB,
     @JsonProperty("powershell")
     POWERSHELL,
-    @JsonProperty("selenium")
-    SELENIUM
+    @JsonProperty("cypress")
+    CYPRESS
 }
