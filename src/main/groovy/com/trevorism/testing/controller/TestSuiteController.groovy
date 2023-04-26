@@ -95,7 +95,7 @@ class TestSuiteController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     TestSuite updateTestSuite(TestSuite testSuite) {
-        WorkflowStatus status = githubClient.getWorkflowStatus(testSuite.source, new WorkflowRequest(unitTest: testSuite?.kind?.toLowerCase() == "unit"))
+        WorkflowStatus status = githubClient.getWorkflowStatus(testSuite.source, new WorkflowRequest(testType: testSuite?.kind))
         TestSuite updated = testExecutorService.updateTestSuiteFromStatus(testSuite, status)
         if(!updated.lastRunSuccess){
             new ErrorsController().createError(new TestError(source: updated.source, message: "Failing test suite ${updated.id} - ${updated.name}", date: updated.lastRunDate))

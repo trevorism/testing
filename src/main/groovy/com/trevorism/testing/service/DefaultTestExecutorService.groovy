@@ -25,14 +25,9 @@ class DefaultTestExecutorService implements TestExecutorService {
     @Override
     boolean executeTestSuite(TestSuite testSuite) {
         String testType = testSuite.kind.toLowerCase()
-
-        if(testType == "unit" || testType == "cucumber"){
-            boolean result = githubClient.invokeWorkflow(testSuite.source, new WorkflowRequest(unitTest: testType == "unit"))
-            scheduleTestSuiteResultCheck(testSuite)
-            return result
-        }
-
-        return false
+        boolean result = githubClient.invokeWorkflow(testSuite.source, new WorkflowRequest(testType: testType))
+        scheduleTestSuiteResultCheck(testSuite)
+        return result
     }
 
     private void scheduleTestSuiteResultCheck(TestSuite testSuite) {
