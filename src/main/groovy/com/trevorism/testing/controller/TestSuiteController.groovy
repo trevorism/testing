@@ -24,7 +24,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 
 
 
-@Controller("/suite")
+@Controller("/api/suite")
 class TestSuiteController {
 
     TestSuiteService testSuiteService = new DefaultTestSuiteService()

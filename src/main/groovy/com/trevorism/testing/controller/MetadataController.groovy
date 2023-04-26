@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 
 
-@Controller("/metadata")
+@Controller("/api/metadata")
 class MetadataController {
 
     TestMetadataService testMetadataService = new DefaultTestMetadataService()

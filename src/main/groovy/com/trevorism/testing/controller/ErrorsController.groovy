@@ -16,7 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
-@Controller("/error")
+@Controller("/api/error")
 class ErrorsController {
 
     private Repository<TestError> errorRepository = new PingingDatastoreRepository<>(TestError)
