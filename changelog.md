@@ -1,3 +1,7 @@
+# 0.7.0
+
+Update to java 17, micronaut
+
 # 0.6.0
 
 Remove concept of test suite details and added details into the test suite object.

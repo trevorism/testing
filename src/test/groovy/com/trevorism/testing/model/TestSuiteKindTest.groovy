@@ -1,6 +1,6 @@
 package com.trevorism.testing.model
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestSuiteKindTest {
 
@@ -11,7 +11,7 @@ class TestSuiteKindTest {
         assert TestSuiteKind.valueOf("cucumber".toUpperCase())
         assert TestSuiteKind.valueOf("web".toUpperCase())
         assert TestSuiteKind.valueOf("powershell".toUpperCase())
-        assert TestSuiteKind.valueOf("selenium".toUpperCase())
+        assert TestSuiteKind.valueOf("cypress".toUpperCase())
     }
 
     @Test

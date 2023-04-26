@@ -2,7 +2,7 @@ package com.trevorism.testing.controller
 
 import com.trevorism.data.Repository
 import com.trevorism.testing.model.TestError
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class ErrorsControllerTest {
 

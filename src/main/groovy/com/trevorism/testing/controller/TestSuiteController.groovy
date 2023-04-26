@@ -12,89 +12,80 @@ import com.trevorism.testing.service.DefaultTestSuiteService
 import com.trevorism.testing.service.GithubClient
 import com.trevorism.testing.service.TestExecutorService
 import com.trevorism.testing.service.TestSuiteService
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
+import io.micronaut.http.MediaType
+import io.micronaut.http.annotation.Body
+import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Delete
+import io.micronaut.http.annotation.Get
+import io.micronaut.http.annotation.Post
+import io.micronaut.http.annotation.Put
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 
-import javax.ws.rs.Consumes
-import javax.ws.rs.DELETE
-import javax.ws.rs.GET
-import javax.ws.rs.POST
-import javax.ws.rs.PUT
-import javax.ws.rs.Path
-import javax.ws.rs.PathParam
-import javax.ws.rs.Produces
-import javax.ws.rs.core.MediaType
 
-@Api("Test Suite Operations")
-@Path("suite")
+
+@Controller("/suite")
 class TestSuiteController {
 
     TestSuiteService testSuiteService = new DefaultTestSuiteService()
     TestExecutorService testExecutorService = new DefaultTestExecutorService()
     GithubClient githubClient = new DefaultGithubClient()
 
-    @ApiOperation(value = "Creates a new test suite **Secure")
+    @Tag(name = "Test Suite Operations")
+    @Operation(summary = "Creates a new test suite **Secure")
     @Secure(Roles.USER)
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    TestSuite registerSuite(TestSuite testSuite) {
+    @Post(value = "/", produces = MediaType.APPLICATION_JSON, consumes = MediaType.APPLICATION_JSON)
+    TestSuite registerSuite(@Body TestSuite testSuite) {
         testSuiteService.create(testSuite)
     }
 
-    @ApiOperation(value = "Lists all test suites **Secure")
+    @Tag(name = "Test Suite Operations")
+    @Operation(summary = "Lists all test suites **Secure")
     @Secure(Roles.USER)
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    @Get(value = "/", produces = MediaType.APPLICATION_JSON)
     List<TestSuite> listAllTestSuites() {
         testSuiteService.list()
     }
 
-    @ApiOperation(value = "Gets test suites based on the service name **Secure")
+    @Tag(name = "Test Suite Operations")
+    @Operation(summary = "Gets test suites based on the service name **Secure")
     @Secure(Roles.USER)
-    @GET
-    @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    TestSuite getTestSuite(@PathParam("id") String id) {
+    @Get(value = "/{id}", produces = MediaType.APPLICATION_JSON)
+    TestSuite getTestSuite(String id) {
         testSuiteService.get(id)
     }
 
-    @ApiOperation(value = "Invoke the test suite **Secure")
+    @Tag(name = "Test Suite Operations")
+    @Operation(summary = "Invoke the test suite **Secure")
     @Secure(value = Roles.USER, allowInternal = true)
-    @POST
-    @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    TestSuite invokeTestSuite(@PathParam("id") String id) {
+    @Post(value = "/{id}", produces = MediaType.APPLICATION_JSON, consumes = MediaType.APPLICATION_JSON)
+    TestSuite invokeTestSuite(String id) {
         TestSuite testSuite = testSuiteService.get(id)
         testExecutorService.executeTestSuite(testSuite)
         return testSuite
     }
 
-    @ApiOperation(value = "Remove registered test suite **Secure")
+    @Tag(name = "Test Suite Operations")
+    @Operation(summary = "Remove registered test suite **Secure")
     @Secure(Roles.USER)
-    @DELETE
-    @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    TestSuite removeTestSuite(@PathParam("id") String id) {
+    @Delete(value = "{id}", produces = MediaType.APPLICATION_JSON)
+    TestSuite removeTestSuite(String id) {
         testSuiteService.delete(id)
     }
 
-    @ApiOperation(value = "Updates registered test suite **Secure")
+    @Tag(name = "Test Suite Operations")
+    @Operation(summary = "Updates registered test suite **Secure")
     @Secure(Roles.USER)
-    @PUT
-    @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    TestSuite updateTestSuite(@PathParam("id") String id, TestSuite testSuite) {
+    @Put(value = "/{id}", produces = MediaType.APPLICATION_JSON, consumes = MediaType.APPLICATION_JSON)
+    TestSuite updateTestSuite(String id, @Body TestSuite testSuite) {
         testSuiteService.update(id, testSuite)
     }
 
-    @ApiOperation(value = "Updates test suite based on last execution **Secure")
+    @Tag(name = "Test Suite Operations")
+    @Operation(summary = "Updates test suite based on last execution **Secure")
     @Secure(value = Roles.USER, allowInternal = true)
-    @PUT
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    TestSuite updateTestSuite(TestSuite testSuite) {
+    @Put(value = "/", produces = MediaType.APPLICATION_JSON, consumes = MediaType.APPLICATION_JSON)
+    TestSuite updateTestSuite(@Body TestSuite testSuite) {
         WorkflowStatus status = githubClient.getWorkflowStatus(testSuite.source, new WorkflowRequest(testType: testSuite?.kind))
         TestSuite updated = testExecutorService.updateTestSuiteFromStatus(testSuite, status)
         if(!updated.lastRunSuccess){

@@ -2,7 +2,7 @@ package com.trevorism.testing.service
 
 import com.trevorism.https.SecureHttpClient
 import com.trevorism.testing.model.WorkflowRequest
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class DefaultGithubClientTest {
 

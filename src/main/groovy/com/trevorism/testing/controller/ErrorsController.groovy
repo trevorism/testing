@@ -9,68 +9,55 @@ import com.trevorism.model.Alert
 import com.trevorism.secure.Roles
 import com.trevorism.secure.Secure
 import com.trevorism.testing.model.TestError
-
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
-
-import javax.ws.rs.Consumes
-import javax.ws.rs.DELETE
-import javax.ws.rs.GET
-import javax.ws.rs.POST
-import javax.ws.rs.Path
-import javax.ws.rs.PathParam
-import javax.ws.rs.Produces
-import javax.ws.rs.core.MediaType
+import io.micronaut.http.MediaType
+import io.micronaut.http.annotation.*
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
-@Api("Error Operations")
-@Path("error")
+@Controller("/error")
 class ErrorsController {
 
     private Repository<TestError> errorRepository = new PingingDatastoreRepository<>(TestError)
 
-    @ApiOperation(value = "Lists all errors")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    @Tag(name = "Error Operations")
+    @Operation(summary = "Lists all errors")
+    @Get(value = "/", produces = MediaType.APPLICATION_JSON)
     List<TestError> getLastErrors() {
         errorRepository.sort(new SortBuilder().addSort(new Sort("date",true)).build())
     }
 
-    @ApiOperation(value = "Gets error from an id **Secure")
+    @Tag(name = "Error Operations")
+    @Operation(summary = "Gets error from an id **Secure")
     @Secure(Roles.USER)
-    @GET
-    @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    TestError getError(@PathParam("id") String id) {
+    @Get(value = "/{id}", produces = MediaType.APPLICATION_JSON)
+    TestError getError(String id) {
         errorRepository.get(id)
     }
 
-    @ApiOperation(value = "Creates a new error **Secure")
+    @Tag(name = "Error Operations")
+    @Operation(summary = "Creates a new error **Secure")
     @Secure(Roles.USER)
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    TestError createError(TestError error) {
+    @Post(value = "/", produces = MediaType.APPLICATION_JSON, consumes = MediaType.APPLICATION_JSON)
+    TestError createError(@Body TestError error) {
         if(error.date == null)
             error.date = new Date()
         errorRepository.create(error)
     }
 
-    @ApiOperation(value = "Remove an error **Secure")
+    @Tag(name = "Error Operations")
+    @Operation(summary = "Remove an error **Secure")
     @Secure(Roles.USER)
-    @DELETE
-    @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    TestError removeError(@PathParam("id") String id) {
+    @Delete(value = "{id}", produces = MediaType.APPLICATION_JSON)
+    TestError removeError(String id) {
         errorRepository.delete(id)
     }
 
-    @ApiOperation(value = "Sends an alert if there are any active errors **Secure")
+    @Tag(name = "Error Operations")
+    @Operation(summary = "Sends an alert if there are any active errors **Secure")
     @Secure(value = Roles.USER, allowInternal = true)
-    @GET
-    @Path("alert")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Get(value = "/alert", produces = MediaType.APPLICATION_JSON)
     boolean checkForErrors() {
         def list = errorRepository.list()
         if(list){
@@ -82,14 +69,13 @@ class ErrorsController {
         return false
     }
 
-    @ApiOperation(value = "Cleanup week long old errors **Secure")
+    @Tag(name = "Error Operations")
+    @Operation(summary = "Cleanup week long old errors **Secure")
     @Secure(value = Roles.USER, allowInternal = true)
-    @DELETE
-    @Path("scrub")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Delete(value = "/scrub", produces = MediaType.APPLICATION_JSON)
     boolean cleanOldErrors() {
         def list = errorRepository.list()
-        def date = Instant.now().minus(7, ChronoUnit.DAYS).toDate()
+        def date = Date.from(Instant.now().minus(7, ChronoUnit.DAYS))
         def errors = list.findAll{ it.date < date}
         if(!errors){
             return false

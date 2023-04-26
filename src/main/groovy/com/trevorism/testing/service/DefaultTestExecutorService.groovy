@@ -34,7 +34,7 @@ class DefaultTestExecutorService implements TestExecutorService {
         Instant tenMinutesFromNow = Instant.now().plusSeconds(60 * CHECK_TEST_RESULTS_MINUTES)
         String json = gson.toJson(testSuite)
         ScheduledTaskFactory scheduledTaskFactory = new DefaultScheduledTaskFactory()
-        ScheduledTask scheduledTask = scheduledTaskFactory.createImmediateTask("${testSuite.name}_${tenMinutesFromNow}", tenMinutesFromNow.toDate(), new EndpointSpec("https://testing.trevorism.com/api/suite", HttpMethod.PUT, json))
+        ScheduledTask scheduledTask = scheduledTaskFactory.createImmediateTask("${testSuite.name}_${tenMinutesFromNow}", Date.from(tenMinutesFromNow), new EndpointSpec("https://testing.trevorism.com/api/suite", HttpMethod.PUT, json))
         scheduleService.create(scheduledTask)
     }
 
