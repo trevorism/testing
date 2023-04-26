@@ -1,5 +1,7 @@
 package com.trevorism.testing.model
 
+import com.fasterxml.jackson.annotation.JsonFormat
+
 class TestSuite {
 
     String id
@@ -11,6 +13,7 @@ class TestSuite {
     String source
 
     boolean lastRunSuccess
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     Date lastRunDate
     long lastRuntimeSeconds
 }
