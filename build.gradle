@@ -60,7 +60,7 @@ dependencies {
     implementation 'com.trevorism:datastore-client:2.8.0'
     implementation 'com.trevorism:reactions-client:0.4.1'
     implementation 'com.trevorism:schedule-client:0.8.0'
-    implementation 'com.trevorism:micronaut-security-utils:0.5.1'
+    implementation 'com.trevorism:micronaut-security-utils:0.6.0'
 
     runtimeOnly("ch.qos.logback:logback-classic")
     implementation 'org.slf4j:slf4j-simple:2.0.6'
