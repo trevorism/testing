@@ -29,7 +29,6 @@ class MetadataController {
     @Operation(summary = "Gets metadata from a metadata id **Secure")
     @Secure(Roles.USER)
     @Get(value = "/{id}", produces = MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     TestMetadata getMetadata(String id) {
         testMetadataService.getMetadata(id)
     }
