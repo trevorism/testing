@@ -18,7 +18,6 @@ class ErrorsControllerTest {
         ErrorsController ec = new ErrorsController()
         ec.errorRepository = [list:{}] as Repository<TestError>
         assert !ec.cleanOldErrors()
-
     }
 
     @Test

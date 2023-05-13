@@ -10,7 +10,7 @@ class DefaultGithubClientTest {
     void testInvokeWorkflow() {
         GithubClient githubClient = new DefaultGithubClient()
         githubClient.client = [post: { url, json -> "true"}] as SecureHttpClient
-        assert githubClient.invokeWorkflow("threshold", new WorkflowRequest(testType: "acceptance"))
+        assert githubClient.invokeWorkflow("threshold", new WorkflowRequest(testType: "cucumber"))
     }
 
     @Test
