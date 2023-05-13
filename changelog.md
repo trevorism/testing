@@ -1,3 +1,7 @@
+# 0.7.1
+
+Improve tests, logging and error handling. Require HTTPS
+
 # 0.7.0
 
 Update to java 17, micronaut

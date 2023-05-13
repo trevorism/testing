@@ -90,7 +90,7 @@ appengine {
     stage.artifact = "${buildDir}/libs/${project.name}-all.jar"
     deploy {
         projectId = "trevorism-testing"
-        version = "0-7-0"
+        version = "0-7-1"
         stopPreviousVersion = true
         promote = true
 

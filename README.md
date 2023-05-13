@@ -6,7 +6,7 @@
 
 Webapp for managing and invoking tests on the trevorism platform
 
-Current version: 0.7.0
+Current version: 0.7.1
 
 Deployed to https://testing.trevorism.com
 

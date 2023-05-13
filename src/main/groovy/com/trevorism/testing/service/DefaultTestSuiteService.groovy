@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory
 
 class DefaultTestSuiteService implements TestSuiteService {
 
-    private static final Logger log = LoggerFactory.getLogger(DefaultTestSuiteService.class.name)
+
     private Repository<TestSuite> testSuiteRepository = new PingingDatastoreRepository<>(TestSuite)
 
 

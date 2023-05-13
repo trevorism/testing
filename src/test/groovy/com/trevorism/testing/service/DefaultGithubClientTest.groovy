@@ -19,4 +19,11 @@ class DefaultGithubClientTest {
         githubClient.client = [get: { url -> "{}"}] as SecureHttpClient
         assert githubClient.getWorkflowStatus("github", new WorkflowRequest(yamlName: "test.yml"))
     }
+
+    @Test
+    void testInvokeInvalidWorkflow() {
+        GithubClient githubClient = new DefaultGithubClient()
+        githubClient.client = [post: { url, json -> throw new RuntimeException("Error")}] as SecureHttpClient
+        assert !githubClient.invokeWorkflow("zzz_blah", new WorkflowRequest(testType: "cucumber"))
+    }
 }

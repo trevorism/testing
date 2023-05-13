@@ -61,7 +61,11 @@ class TestSuiteController {
     @Post(value = "/{id}", produces = MediaType.APPLICATION_JSON, consumes = MediaType.APPLICATION_JSON)
     TestSuite invokeTestSuite(String id) {
         TestSuite testSuite = testSuiteService.get(id)
-        testExecutorService.executeTestSuite(testSuite)
+        boolean result = testExecutorService.executeTestSuite(testSuite)
+        if(!result){
+            throw new RuntimeException("Unable to invoke test suite")
+        }
+
         return testSuite
     }
 

@@ -26,7 +26,9 @@ class DefaultTestExecutorService implements TestExecutorService {
     boolean executeTestSuite(TestSuite testSuite) {
         String testType = testSuite.kind.toLowerCase()
         boolean result = githubClient.invokeWorkflow(testSuite.source, new WorkflowRequest(testType: testType))
-        scheduleTestSuiteResultCheck(testSuite)
+        if (result) {
+            scheduleTestSuiteResultCheck(testSuite)
+        }
         return result
     }
 
@@ -34,7 +36,10 @@ class DefaultTestExecutorService implements TestExecutorService {
         Instant tenMinutesFromNow = Instant.now().plusSeconds(60 * CHECK_TEST_RESULTS_MINUTES)
         String json = gson.toJson(testSuite)
         ScheduledTaskFactory scheduledTaskFactory = new DefaultScheduledTaskFactory()
-        ScheduledTask scheduledTask = scheduledTaskFactory.createImmediateTask("${testSuite.name}_${tenMinutesFromNow}", Date.from(tenMinutesFromNow), new EndpointSpec("https://testing.trevorism.com/api/suite", HttpMethod.PUT, json))
+        ScheduledTask scheduledTask = scheduledTaskFactory.createImmediateTask(
+                "${testSuite.name}_${tenMinutesFromNow}", Date.from(tenMinutesFromNow),
+                new EndpointSpec("https://testing.trevorism.com/api/suite", HttpMethod.PUT, json))
+
         scheduleService.create(scheduledTask)
     }
 
