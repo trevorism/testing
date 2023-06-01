@@ -10,12 +10,14 @@ import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.*
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.inject.Inject
 
 
 @Controller("/api/metadata")
 class MetadataController {
 
-    TestMetadataService testMetadataService = new DefaultTestMetadataService()
+    @Inject
+    TestMetadataService testMetadataService
 
     @Tag(name = "Metadata Operations")
     @Operation(summary = "Lists all test metadata **Secure")

@@ -10,7 +10,7 @@ class DefaultGithubClientTest {
     void testInvokeWorkflow() {
         GithubClient githubClient = new DefaultGithubClient()
         githubClient.client = [post: { url, json -> "true"}] as SecureHttpClient
-        assert githubClient.invokeWorkflow("threshold", new WorkflowRequest(testType: "cucumber"))
+        assert githubClient.invokeWorkflow("threshold", new WorkflowRequest(workflowInputs: ["TEST_TYPE":"cucumber"]))
     }
 
     @Test
@@ -24,6 +24,6 @@ class DefaultGithubClientTest {
     void testInvokeInvalidWorkflow() {
         GithubClient githubClient = new DefaultGithubClient()
         githubClient.client = [post: { url, json -> throw new RuntimeException("Error")}] as SecureHttpClient
-        assert !githubClient.invokeWorkflow("zzz_blah", new WorkflowRequest(testType: "cucumber"))
+        assert !githubClient.invokeWorkflow("zzz_blah", new WorkflowRequest(workflowInputs: ["TEST_TYPE":"cucumber"]))
     }
 }

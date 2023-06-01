@@ -1,3 +1,7 @@
+# 0.8.0
+
+Update to latest micronaut and datastore utils. Update calling github service.
+
 # 0.7.1
 
 Improve tests, logging and error handling. Require HTTPS

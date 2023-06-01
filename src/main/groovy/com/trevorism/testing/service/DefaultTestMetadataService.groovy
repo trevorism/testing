@@ -1,12 +1,18 @@
 package com.trevorism.testing.service
 
-import com.trevorism.data.PingingDatastoreRepository
+import com.trevorism.data.FastDatastoreRepository
 import com.trevorism.data.Repository
+import com.trevorism.https.SecureHttpClient
 import com.trevorism.testing.model.TestMetadata
 
+@jakarta.inject.Singleton
 class DefaultTestMetadataService implements TestMetadataService{
 
-    Repository<TestMetadata> testMetadataRepository = new PingingDatastoreRepository<>(TestMetadata)
+    Repository<TestMetadata> testMetadataRepository
+
+    DefaultTestMetadataService(SecureHttpClient secureHttpClient){
+        testMetadataRepository = new FastDatastoreRepository<>(TestMetadata, secureHttpClient)
+    }
 
     @Override
     List<TestMetadata> listMetadata() {

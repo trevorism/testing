@@ -21,15 +21,20 @@ import io.micronaut.http.annotation.Post
 import io.micronaut.http.annotation.Put
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
-
+import jakarta.inject.Inject
 
 
 @Controller("/api/suite")
 class TestSuiteController {
 
-    TestSuiteService testSuiteService = new DefaultTestSuiteService()
-    TestExecutorService testExecutorService = new DefaultTestExecutorService()
-    GithubClient githubClient = new DefaultGithubClient()
+    @Inject
+    TestSuiteService testSuiteService
+    @Inject
+    TestExecutorService testExecutorService
+    @Inject
+    GithubClient githubClient
+    @Inject
+    ErrorsController errorsController
 
     @Tag(name = "Test Suite Operations")
     @Operation(summary = "Creates a new test suite **Secure")
@@ -93,7 +98,7 @@ class TestSuiteController {
         WorkflowStatus status = githubClient.getWorkflowStatus(testSuite.source, new WorkflowRequest(testType: testSuite?.kind))
         TestSuite updated = testExecutorService.updateTestSuiteFromStatus(testSuite, status)
         if(!updated.lastRunSuccess){
-            new ErrorsController().createError(new TestError(source: updated.source, message: "Failing test suite ${updated.id} - ${updated.name}", date: updated.lastRunDate))
+            errorsController.createError(new TestError(source: updated.source, message: "Failing test suite ${updated.id} - ${updated.name}", date: updated.lastRunDate))
         }
         updateTestSuite(updated.id, updated)
 

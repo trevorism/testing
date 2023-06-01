@@ -1,18 +1,22 @@
 package com.trevorism.testing.service
 
-import com.trevorism.data.PingingDatastoreRepository
+import com.trevorism.data.FastDatastoreRepository
 import com.trevorism.data.Repository
+import com.trevorism.https.SecureHttpClient
 import com.trevorism.testing.model.TestSuite
 
 import com.trevorism.testing.model.TestSuiteKind
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+@jakarta.inject.Singleton
 class DefaultTestSuiteService implements TestSuiteService {
 
+    private Repository<TestSuite> testSuiteRepository
 
-    private Repository<TestSuite> testSuiteRepository = new PingingDatastoreRepository<>(TestSuite)
-
+    DefaultTestSuiteService(SecureHttpClient secureHttpClient){
+        testSuiteRepository = new FastDatastoreRepository<>(TestSuite, secureHttpClient)
+    }
 
     @Override
     TestSuite create(TestSuite testSuite) {
