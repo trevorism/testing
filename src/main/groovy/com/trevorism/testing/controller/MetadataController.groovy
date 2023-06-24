@@ -3,7 +3,6 @@ package com.trevorism.testing.controller
 import com.trevorism.secure.Roles
 import com.trevorism.secure.Secure
 import com.trevorism.testing.model.TestMetadata
-import com.trevorism.testing.service.DefaultTestMetadataService
 import com.trevorism.testing.service.TestMetadataService
 
 import io.micronaut.http.MediaType

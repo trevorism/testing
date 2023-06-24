@@ -6,9 +6,6 @@ import com.trevorism.testing.model.TestError
 import com.trevorism.testing.model.TestSuite
 import com.trevorism.testing.model.WorkflowRequest
 import com.trevorism.testing.model.WorkflowStatus
-import com.trevorism.testing.service.DefaultGithubClient
-import com.trevorism.testing.service.DefaultTestExecutorService
-import com.trevorism.testing.service.DefaultTestSuiteService
 import com.trevorism.testing.service.GithubClient
 import com.trevorism.testing.service.TestExecutorService
 import com.trevorism.testing.service.TestSuiteService
@@ -95,7 +92,7 @@ class TestSuiteController {
     @Secure(value = Roles.USER, allowInternal = true)
     @Put(value = "/", produces = MediaType.APPLICATION_JSON, consumes = MediaType.APPLICATION_JSON)
     TestSuite updateTestSuite(@Body TestSuite testSuite) {
-        WorkflowStatus status = githubClient.getWorkflowStatus(testSuite.source, new WorkflowRequest(testType: testSuite?.kind))
+        WorkflowStatus status = githubClient.getWorkflowStatus(testSuite.source, new WorkflowRequest())
         TestSuite updated = testExecutorService.updateTestSuiteFromStatus(testSuite, status)
         if(!updated.lastRunSuccess){
             errorsController.createError(new TestError(source: updated.source, message: "Failing test suite ${updated.id} - ${updated.name}", date: updated.lastRunDate))
