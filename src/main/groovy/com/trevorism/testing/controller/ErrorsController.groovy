@@ -2,7 +2,6 @@ package com.trevorism.testing.controller
 
 import com.trevorism.AlertClient
 import com.trevorism.data.FastDatastoreRepository
-import com.trevorism.data.PingingDatastoreRepository
 import com.trevorism.data.Repository
 import com.trevorism.data.model.sorting.Sort
 import com.trevorism.data.model.sorting.SortBuilder
@@ -23,14 +22,17 @@ import java.time.temporal.ChronoUnit
 class ErrorsController {
 
     private Repository<TestError> errorRepository
+    private SecureHttpClient secureHttpClient
 
     ErrorsController(SecureHttpClient secureHttpClient) {
+        this.secureHttpClient = secureHttpClient
         errorRepository = new FastDatastoreRepository<>(TestError, secureHttpClient)
     }
 
     @Tag(name = "Error Operations")
     @Operation(summary = "Lists all errors")
     @Get(value = "/", produces = MediaType.APPLICATION_JSON)
+    @Secure(value = Roles.USER, allowInternal = true)
     List<TestError> getLastErrors() {
         errorRepository.sort(new SortBuilder().addSort(new Sort("date", true)).build())
     }
@@ -68,9 +70,12 @@ class ErrorsController {
     boolean checkForErrors() {
         def list = errorRepository.list()
         if (list) {
-            AlertClient alertClient = new AlertClient()
-            alertClient.sendAlert(new Alert(subject: "Error Report",
-                    body: "There are errors to resolve, https://testing.trevorism.com/api/error"))
+            AlertClient alertClient = new AlertClient(secureHttpClient)
+            String body = "There are ${list.size()} errors to resolve."
+            if (list.size() == 1) {
+                body = "There is 1 error to resolve."
+            }
+            alertClient.sendAlert(new Alert(subject: "Error Report", body: body))
             return true
         }
         return false
