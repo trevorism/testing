@@ -74,7 +74,7 @@ class ErrorsController {
         error.message = "See details"
         error.details = genericError
         error.date = new Date()
-        new FastDatastoreRepository<>(TestError, new AppClientSecureHttpClient()).create(error)
+        return new FastDatastoreRepository<>(TestError, new AppClientSecureHttpClient()).create(error)
     }
 
     @Tag(name = "Error Operations")
