@@ -16,7 +16,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.google.cloud.tools:appengine-gradle-plugin:2.5.0'
+        classpath 'com.google.cloud.tools:appengine-gradle-plugin:2.8.0'
         classpath 'com.trevorism:gradle-acceptance-plugin:2.3.1'
     }
 }
@@ -24,7 +24,7 @@ buildscript {
 plugins {
     id("groovy")
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("io.micronaut.application") version "4.2.0"
+    id("io.micronaut.application") version "4.3.8"
     id "jacoco"
 }
 

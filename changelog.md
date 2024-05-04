@@ -1,3 +1,7 @@
+# 0.9.0
+
+Add a webhook for generic errors. Also updated micronaut and gradle dependencies.
+
 # 0.8.0
 
 Update to latest micronaut and datastore utils. Update calling github service.

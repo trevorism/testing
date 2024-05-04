@@ -64,6 +64,17 @@ class ErrorsController {
     }
 
     @Tag(name = "Error Operations")
+    @Operation(summary = "Creates a new error")
+    @Post(value = "/webhook", produces = MediaType.APPLICATION_JSON, consumes = MediaType.APPLICATION_JSON)
+    TestError createError(@Body Map genericError) {
+        TestError error = new TestError()
+        error.source = "webhook"
+        error.message = "See details"
+        error.details = genericError
+        createError(error)
+    }
+
+    @Tag(name = "Error Operations")
     @Operation(summary = "Sends an alert if there are any active errors **Secure")
     @Secure(value = Roles.USER, allowInternal = true)
     @Get(value = "/alert", produces = MediaType.APPLICATION_JSON)
