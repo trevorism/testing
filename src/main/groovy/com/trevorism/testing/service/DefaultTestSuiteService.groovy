@@ -4,25 +4,31 @@ import com.trevorism.data.FastDatastoreRepository
 import com.trevorism.data.Repository
 import com.trevorism.https.SecureHttpClient
 import com.trevorism.testing.model.TestSuite
-
 import com.trevorism.testing.model.TestSuiteKind
+import io.micronaut.runtime.http.scope.RequestScope
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-@jakarta.inject.Singleton
+@RequestScope
 class DefaultTestSuiteService implements TestSuiteService {
 
+    private static final Logger log = LoggerFactory.getLogger(DefaultTestSuiteService)
     private Repository<TestSuite> testSuiteRepository
 
-    DefaultTestSuiteService(SecureHttpClient secureHttpClient){
+    DefaultTestSuiteService(SecureHttpClient secureHttpClient) {
         testSuiteRepository = new FastDatastoreRepository<>(TestSuite, secureHttpClient)
     }
 
     @Override
     TestSuite create(TestSuite testSuite) {
-        validateInput(testSuite)
-        TestSuite createdSuite = testSuiteRepository.create(testSuite)
-        return createdSuite
+        try {
+            validateInput(testSuite)
+            TestSuite createdSuite = testSuiteRepository.create(testSuite)
+            return createdSuite
+        } catch (Exception e) {
+            log.error("Failed to create test suite", e)
+            throw e
+        }
     }
 
     @Override

@@ -4,8 +4,9 @@ import com.trevorism.data.FastDatastoreRepository
 import com.trevorism.data.Repository
 import com.trevorism.https.SecureHttpClient
 import com.trevorism.testing.model.TestMetadata
+import io.micronaut.runtime.http.scope.RequestScope
 
-@jakarta.inject.Singleton
+@RequestScope
 class DefaultTestMetadataService implements TestMetadataService{
 
     Repository<TestMetadata> testMetadataRepository

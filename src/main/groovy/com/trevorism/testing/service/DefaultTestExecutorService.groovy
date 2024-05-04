@@ -13,10 +13,11 @@ import com.trevorism.schedule.model.ScheduledTask
 import com.trevorism.testing.model.TestSuite
 import com.trevorism.testing.model.WorkflowRequest
 import com.trevorism.testing.model.WorkflowStatus
+import io.micronaut.runtime.http.scope.RequestScope
 
 import java.time.Instant
 
-@jakarta.inject.Singleton
+@RequestScope
 class DefaultTestExecutorService implements TestExecutorService {
 
     public static final int CHECK_TEST_RESULTS_MINUTES = 15
