@@ -56,16 +56,15 @@ dependencies {
         exclude module:"slf4j-nop"
     }
 
-    implementation 'com.google.code.gson:gson:2.10.1'
-
+    implementation 'com.google.code.gson:gson:2.11.0'
     implementation 'com.trevorism:micronaut-utility-beans:1.3.0'
     implementation 'com.trevorism:datastore-client:3.2.0'
     implementation 'com.trevorism:reactions-client:0.6.0'
     implementation 'com.trevorism:schedule-client:0.9.0'
 
     runtimeOnly("ch.qos.logback:logback-classic")
-    implementation 'org.slf4j:slf4j-simple:2.0.6'
 
+    testImplementation 'com.trevorism:test-result-events:0.3.0'
     acceptanceImplementation 'io.cucumber:cucumber-groovy:6.10.4'
 }
 
@@ -89,12 +88,25 @@ tasks.withType(GroovyCompile) {
 }
 
 appengine {
-    stage.artifact = "${buildDir}/libs/${project.name}-all.jar"
+    stage.artifact = layout.buildDirectory.file("libs/${project.name}-all.jar")
     deploy {
         projectId = "trevorism-testing"
-        version = "0-8-0"
+        version = "0-9-0"
         stopPreviousVersion = true
         promote = true
+    }
+}
 
+test {
+    systemProperty ("trevorism.test.event", findProperty("trevorism.test.event") == "enabled" ? project.name : null)
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.5
+            }
+        }
     }
 }

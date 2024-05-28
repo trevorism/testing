@@ -6,7 +6,6 @@ import com.trevorism.data.Repository
 import com.trevorism.data.model.sorting.Sort
 import com.trevorism.data.model.sorting.SortBuilder
 import com.trevorism.https.AppClientSecureHttpClient
-import com.trevorism.https.InternalTokenSecureHttpClient
 import com.trevorism.https.SecureHttpClient
 import com.trevorism.model.Alert
 import com.trevorism.secure.Roles

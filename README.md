@@ -24,7 +24,8 @@ The goals of the testing platform are
 * Test result management
   * What tests are failing?
   * Enable/disable particular test
-* Create test collections
+  * What tests have run over time?
+* Test collections
   * Named collections for regression tests
 * Other
   * What version of the source is failing?
