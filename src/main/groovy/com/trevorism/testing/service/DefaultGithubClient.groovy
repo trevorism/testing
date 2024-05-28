@@ -3,7 +3,6 @@ package com.trevorism.testing.service
 import com.google.gson.Gson
 import com.trevorism.https.SecureHttpClient
 import com.trevorism.testing.model.WorkflowRequest
-import com.trevorism.testing.model.WorkflowStatus
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -27,12 +26,6 @@ class DefaultGithubClient implements GithubClient {
             log.warn("Unable to invoke workflow", e)
             return false
         }
-    }
-
-    @Override
-    WorkflowStatus getWorkflowStatus(String projectName, WorkflowRequest workflowRequest) {
-        String status = client.get("${createUrl(projectName)}/${workflowRequest.yamlName}")
-        gson.fromJson(status, WorkflowStatus)
     }
 
     private static String createUrl(String projectName) {

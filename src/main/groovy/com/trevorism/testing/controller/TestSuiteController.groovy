@@ -3,23 +3,16 @@ package com.trevorism.testing.controller
 import com.trevorism.secure.Roles
 import com.trevorism.secure.Secure
 import com.trevorism.testing.model.TestError
+import com.trevorism.testing.model.TestEvent
 import com.trevorism.testing.model.TestSuite
-import com.trevorism.testing.model.WorkflowRequest
-import com.trevorism.testing.model.WorkflowStatus
 import com.trevorism.testing.service.GithubClient
 import com.trevorism.testing.service.TestExecutorService
 import com.trevorism.testing.service.TestSuiteService
 import io.micronaut.http.MediaType
-import io.micronaut.http.annotation.Body
-import io.micronaut.http.annotation.Controller
-import io.micronaut.http.annotation.Delete
-import io.micronaut.http.annotation.Get
-import io.micronaut.http.annotation.Post
-import io.micronaut.http.annotation.Put
+import io.micronaut.http.annotation.*
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.inject.Inject
-
 
 @Controller("/api/suite")
 class TestSuiteController {
@@ -64,7 +57,7 @@ class TestSuiteController {
     TestSuite invokeTestSuite(String id) {
         TestSuite testSuite = testSuiteService.get(id)
         boolean result = testExecutorService.executeTestSuite(testSuite)
-        if(!result){
+        if (!result) {
             throw new RuntimeException("Unable to invoke test suite")
         }
 
@@ -90,14 +83,19 @@ class TestSuiteController {
     @Tag(name = "Test Suite Operations")
     @Operation(summary = "Updates test suite based on last execution **Secure")
     @Secure(value = Roles.USER, allowInternal = true)
-    @Put(value = "/", produces = MediaType.APPLICATION_JSON, consumes = MediaType.APPLICATION_JSON)
-    TestSuite updateTestSuite(@Body TestSuite testSuite) {
-        WorkflowStatus status = githubClient.getWorkflowStatus(testSuite.source, new WorkflowRequest())
-        TestSuite updated = testExecutorService.updateTestSuiteFromStatus(testSuite, status)
-        if(!updated.lastRunSuccess){
-            errorsController.createError(new TestError(source: updated.source, message: "Failing test suite ${updated.id} - ${updated.name}", date: updated.lastRunDate))
+    @Post(value = "/update", produces = MediaType.APPLICATION_JSON, consumes = MediaType.APPLICATION_JSON)
+    TestSuite updateTestSuite(@Body TestEvent testEvent) {
+        TestSuite toUpdate = testExecutorService.updateTestSuiteFromEvent(testEvent)
+        if (!toUpdate) {
+            errorsController.createError(new TestError(message: "Unable to parse test event", source: testEvent.service, date: testEvent.date))
+            return new TestSuite()
         }
-        updateTestSuite(updated.id, updated)
 
+        if (!toUpdate.lastRunSuccess) {
+            errorsController.createError(new TestError(source: toUpdate.source, message: "Failing test suite ${toUpdate.id} - ${toUpdate.name}", date: toUpdate.lastRunDate))
+            return new TestSuite()
+        }
+
+        updateTestSuite(toUpdate.id, toUpdate)
     }
 }

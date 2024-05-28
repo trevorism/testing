@@ -1,3 +1,7 @@
+# 0.9.1
+
+Move to event based updating of test suites.
+
 # 0.9.0
 
 Add a webhook for generic errors. Also updated micronaut and gradle dependencies.
