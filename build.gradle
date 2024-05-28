@@ -99,7 +99,6 @@ appengine {
 
 test {
     systemProperty ("trevorism.test.event", findProperty("trevorism.test.event") == "enabled" ? project.name : null)
-    println "trevorism.test.event: ${findProperty("trevorism.test.event")}"
 }
 
 jacocoTestCoverageVerification {
