@@ -6,7 +6,9 @@ import com.trevorism.data.Repository
 import com.trevorism.data.model.filtering.ComplexFilter
 import com.trevorism.data.model.filtering.FilterBuilder
 import com.trevorism.data.model.filtering.SimpleFilter
+import com.trevorism.https.AppClientSecureHttpClient
 import com.trevorism.https.SecureHttpClient
+import com.trevorism.testing.model.TestError
 import com.trevorism.testing.model.TestEvent
 import com.trevorism.testing.model.TestSuite
 import com.trevorism.testing.model.WorkflowRequest
@@ -22,7 +24,7 @@ class DefaultTestExecutorService implements TestExecutorService {
 
     DefaultTestExecutorService(SecureHttpClient secureHttpClient) {
         githubClient = new DefaultGithubClient(secureHttpClient)
-        testSuiteRepository = new FastDatastoreRepository<>(TestSuite, secureHttpClient)
+        testSuiteRepository = new FastDatastoreRepository<>(TestSuite, new AppClientSecureHttpClient())
     }
 
     @Override
@@ -49,7 +51,8 @@ class DefaultTestExecutorService implements TestExecutorService {
         suite.lastRunDate = testEvent.date
         suite.lastRunSuccess = testEvent.success
         suite.lastRuntimeSeconds = (long) (testEvent.durationMillis / 1000)
-        return suite
+
+        return testSuiteRepository.update(suite.id, suite)
     }
 
 

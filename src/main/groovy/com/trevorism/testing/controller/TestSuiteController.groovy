@@ -82,20 +82,9 @@ class TestSuiteController {
 
     @Tag(name = "Test Suite Operations")
     @Operation(summary = "Updates test suite based on last execution **Secure")
-    @Secure(value = Roles.USER, allowInternal = true)
-    @Post(value = "/update", produces = MediaType.APPLICATION_JSON, consumes = MediaType.APPLICATION_JSON)
+    @Post(value = "/update/webhook", produces = MediaType.APPLICATION_JSON, consumes = MediaType.APPLICATION_JSON)
     TestSuite updateTestSuite(@Body TestEvent testEvent) {
-        TestSuite toUpdate = testExecutorService.updateTestSuiteFromEvent(testEvent)
-        if (!toUpdate) {
-            errorsController.createError(new TestError(message: "Unable to parse test event", source: testEvent.service, date: testEvent.date))
-            return new TestSuite()
-        }
-
-        if (!toUpdate.lastRunSuccess) {
-            errorsController.createError(new TestError(source: toUpdate.source, message: "Failing test suite ${toUpdate.id} - ${toUpdate.name}", date: toUpdate.lastRunDate))
-            return new TestSuite()
-        }
-
-        updateTestSuite(toUpdate.id, toUpdate)
+        TestSuite updated = testExecutorService.updateTestSuiteFromEvent(testEvent)
+        return updated
     }
 }
