@@ -2,7 +2,6 @@ package com.trevorism.testing.controller
 
 import com.trevorism.secure.Roles
 import com.trevorism.secure.Secure
-import com.trevorism.testing.model.TestError
 import com.trevorism.testing.model.TestEvent
 import com.trevorism.testing.model.TestSuite
 import com.trevorism.testing.service.GithubClient
@@ -21,10 +20,6 @@ class TestSuiteController {
     TestSuiteService testSuiteService
     @Inject
     TestExecutorService testExecutorService
-    @Inject
-    GithubClient githubClient
-    @Inject
-    ErrorsController errorsController
 
     @Tag(name = "Test Suite Operations")
     @Operation(summary = "Creates a new test suite **Secure")

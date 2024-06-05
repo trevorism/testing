@@ -1,3 +1,7 @@
+# 0.9.3
+
+Add an error when test runs are in failing state for daily notifications.
+
 # 0.9.2
 
 Move the webhook to avoid conflicts with test invocation.

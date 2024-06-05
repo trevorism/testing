@@ -21,10 +21,13 @@ class DefaultTestExecutorService implements TestExecutorService {
     private static final Logger log = LoggerFactory.getLogger(DefaultTestExecutorService)
     private GithubClient githubClient
     private Repository<TestSuite> testSuiteRepository
+    private Repository<TestError> errorRepository
 
-    DefaultTestExecutorService(SecureHttpClient secureHttpClient) {
-        githubClient = new DefaultGithubClient(secureHttpClient)
-        testSuiteRepository = new FastDatastoreRepository<>(TestSuite, new AppClientSecureHttpClient())
+    DefaultTestExecutorService() {
+        SecureHttpClient appClientSecureHttpClient = new AppClientSecureHttpClient()
+        githubClient = new DefaultGithubClient(appClientSecureHttpClient)
+        testSuiteRepository = new FastDatastoreRepository<>(TestSuite, appClientSecureHttpClient)
+        errorRepository = new FastDatastoreRepository<>(TestError, appClientSecureHttpClient)
     }
 
     @Override
@@ -52,7 +55,14 @@ class DefaultTestExecutorService implements TestExecutorService {
         suite.lastRunSuccess = testEvent.success
         suite.lastRuntimeSeconds = (long) (testEvent.durationMillis / 1000)
 
-        return testSuiteRepository.update(suite.id, suite)
+        TestSuite updated = testSuiteRepository.update(suite.id, suite)
+
+        if(!updated.lastRunSuccess)
+        {
+            TestError error = new TestError(source: suite.source, message: "Test run failed", date: testEvent.date, details: testEvent as Map)
+            errorRepository.create(error)
+        }
+        return updated
     }
 
 
