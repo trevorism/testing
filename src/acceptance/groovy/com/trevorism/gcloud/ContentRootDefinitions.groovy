@@ -30,7 +30,7 @@ When(/I navigate to \\/ping on {word}/) { String url ->
 
 Then(/the API returns a link to the help page/) {  ->
     assert contextRootContent
-    assert !contextRootContent.contains("/help")
+    assert contextRootContent.contains("/help")
 }
 
 Then(/pong is returned, to indicate the service is alive/) {  ->
