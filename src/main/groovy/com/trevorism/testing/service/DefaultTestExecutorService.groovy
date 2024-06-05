@@ -59,7 +59,7 @@ class DefaultTestExecutorService implements TestExecutorService {
 
         if(!updated.lastRunSuccess)
         {
-            TestError error = new TestError(source: suite.source, message: "Test run failed", date: testEvent.date, details: testEvent as Map)
+            TestError error = new TestError(source: suite.source, message: "Test suite run failed", date: testEvent.date, details: [kind: testEvent.kind])
             errorRepository.create(error)
         }
         return updated
