@@ -10,5 +10,5 @@ interface TestMetadataService {
     TestMetadata saveMetadata(TestMetadata metadata)
     TestMetadata removeMetadata(String id)
     TestMetadata updateMetadata(String id, TestMetadata metadata)
-
+    TestMetadata getMetadataByTestSuiteId(String testSuiteId)
 }

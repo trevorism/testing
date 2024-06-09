@@ -4,7 +4,6 @@ import com.trevorism.secure.Roles
 import com.trevorism.secure.Secure
 import com.trevorism.testing.model.TestEvent
 import com.trevorism.testing.model.TestSuite
-import com.trevorism.testing.service.GithubClient
 import com.trevorism.testing.service.TestExecutorService
 import com.trevorism.testing.service.TestSuiteService
 import io.micronaut.http.MediaType

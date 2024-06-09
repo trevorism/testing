@@ -1,3 +1,8 @@
+# 0.9.4
+
+Add testing metadata functionality. Metadata can disable or mark a test suite as 'shouldFail'.
+Disabled test suites will not run when invoked. Test suites marked as 'shouldFail' will run but will not create an error if they fail.
+
 # 0.9.3
 
 Add an error when test runs are in failing state for daily notifications.

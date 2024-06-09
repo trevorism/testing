@@ -2,6 +2,8 @@ package com.trevorism.testing.service
 
 import com.trevorism.data.FastDatastoreRepository
 import com.trevorism.data.Repository
+import com.trevorism.data.model.filtering.FilterBuilder
+import com.trevorism.data.model.filtering.SimpleFilter
 import com.trevorism.https.SecureHttpClient
 import com.trevorism.testing.model.TestMetadata
 
@@ -39,4 +41,8 @@ class DefaultTestMetadataService implements TestMetadataService{
         testMetadataRepository.update(id, metadata)
     }
 
+    @Override
+    TestMetadata getMetadataByTestSuiteId(String testSuiteId) {
+        testMetadataRepository.filter(new FilterBuilder().addFilter(new SimpleFilter("testSuiteId", "=", testSuiteId)).build())?.first()
+    }
 }
