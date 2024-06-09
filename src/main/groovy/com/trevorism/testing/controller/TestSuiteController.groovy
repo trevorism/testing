@@ -52,7 +52,7 @@ class TestSuiteController {
         TestSuite testSuite = testSuiteService.get(id)
         boolean result = testExecutorService.executeTestSuite(testSuite)
         if (!result) {
-            throw new RuntimeException("Unable to invoke test suite")
+            throw new RuntimeException("Unable to invoke test suite. The test suite may be disabled or does not exist.")
         }
 
         return testSuite
