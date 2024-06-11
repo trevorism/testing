@@ -1,3 +1,7 @@
+# 0.9.5
+
+Fix bug when no metadata exists.
+
 # 0.9.4
 
 Add testing metadata functionality. Metadata can disable or mark a test suite as 'shouldFail'.
