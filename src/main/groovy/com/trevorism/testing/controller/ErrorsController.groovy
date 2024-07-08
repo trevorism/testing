@@ -3,11 +3,13 @@ package com.trevorism.testing.controller
 import com.trevorism.AlertClient
 import com.trevorism.data.FastDatastoreRepository
 import com.trevorism.data.Repository
+import com.trevorism.data.model.filtering.SimpleFilter
 import com.trevorism.data.model.sorting.Sort
 import com.trevorism.data.model.sorting.SortBuilder
 import com.trevorism.https.AppClientSecureHttpClient
 import com.trevorism.https.SecureHttpClient
 import com.trevorism.model.Alert
+import com.trevorism.secure.Permissions
 import com.trevorism.secure.Roles
 import com.trevorism.secure.Secure
 import com.trevorism.testing.model.TestError
@@ -31,16 +33,16 @@ class ErrorsController {
     }
 
     @Tag(name = "Error Operations")
-    @Operation(summary = "Lists all errors")
+    @Operation(summary = "Lists all errors **Secure")
     @Get(value = "/", produces = MediaType.APPLICATION_JSON)
-    @Secure(value = Roles.USER, allowInternal = true)
+    @Secure(value = Roles.USER, allowInternal = true, permissions = Permissions.READ)
     List<TestError> getLastErrors() {
-        errorRepository.sort(new SortBuilder().addSort(new Sort("date", true)).build())
+        errorRepository.sort(new Sort("date", true))
     }
 
     @Tag(name = "Error Operations")
     @Operation(summary = "Gets error from an id **Secure")
-    @Secure(Roles.USER)
+    @Secure(value = Roles.USER, allowInternal = true, permissions = Permissions.READ)
     @Get(value = "/{id}", produces = MediaType.APPLICATION_JSON)
     TestError getError(String id) {
         errorRepository.get(id)
@@ -48,7 +50,7 @@ class ErrorsController {
 
     @Tag(name = "Error Operations")
     @Operation(summary = "Creates a new error **Secure")
-    @Secure(Roles.USER)
+    @Secure(value = Roles.USER, allowInternal = true, permissions = Permissions.CREATE)
     @Post(value = "/", produces = MediaType.APPLICATION_JSON, consumes = MediaType.APPLICATION_JSON)
     TestError createError(@Body TestError error) {
         if (error.date == null)
@@ -58,7 +60,7 @@ class ErrorsController {
 
     @Tag(name = "Error Operations")
     @Operation(summary = "Remove an error **Secure")
-    @Secure(Roles.USER)
+    @Secure(value = Roles.USER, permissions = Permissions.DELETE)
     @Delete(value = "{id}", produces = MediaType.APPLICATION_JSON)
     TestError removeError(String id) {
         errorRepository.delete(id)
@@ -67,7 +69,7 @@ class ErrorsController {
     @Tag(name = "Error Operations")
     @Operation(summary = "Creates a new error")
     @Post(value = "/webhook", produces = MediaType.APPLICATION_JSON, consumes = MediaType.APPLICATION_JSON)
-    TestError createError(@Body Map genericError) {
+    TestError createErrorInDefaultTenant(@Body Map genericError) {
         TestError error = new TestError()
         error.source = "webhook"
         error.message = "See details"
@@ -78,7 +80,7 @@ class ErrorsController {
 
     @Tag(name = "Error Operations")
     @Operation(summary = "Sends an alert if there are any active errors **Secure")
-    @Secure(value = Roles.USER, allowInternal = true)
+    @Secure(value = Roles.USER, allowInternal = true, permissions = "RE")
     @Get(value = "/alert", produces = MediaType.APPLICATION_JSON)
     boolean checkForErrors() {
         def list = errorRepository.list()
@@ -96,16 +98,15 @@ class ErrorsController {
 
     @Tag(name = "Error Operations")
     @Operation(summary = "Cleanup week long old errors **Secure")
-    @Secure(value = Roles.USER, allowInternal = true)
+    @Secure(value = Roles.USER, allowInternal = true, permissions = "RD")
     @Delete(value = "/scrub", produces = MediaType.APPLICATION_JSON)
     boolean cleanOldErrors() {
-        def list = errorRepository.list()
         def date = Date.from(Instant.now().minus(7, ChronoUnit.DAYS))
-        def errors = list.findAll { it.date < date }
-        if (!errors) {
+        def list = errorRepository.filter(new SimpleFilter("date", "<", date))
+        if(!list)
             return false
-        }
-        errors.each {
+
+        list.each {
             removeError(it.id)
         }
         return true

@@ -43,7 +43,7 @@ class DefaultTestMetadataService implements TestMetadataService{
 
     @Override
     TestMetadata getMetadataByTestSuiteId(String testSuiteId) {
-        def list = testMetadataRepository.filter(new FilterBuilder().addFilter(new SimpleFilter("testSuiteId", "=", testSuiteId)).build())
+        def list = testMetadataRepository.filter(new SimpleFilter("testSuiteId", "=", testSuiteId))
         if(!list)
             return null
         return list.first()

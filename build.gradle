@@ -57,13 +57,8 @@ dependencies {
     }
 
     implementation 'com.google.code.gson:gson:2.11.0'
-    implementation ('com.trevorism:micronaut-utility-beans:1.3.0'){
-        exclude module:"slf4j-nop"
-        exclude module:"slf4j-simple"
-    }
-    implementation ('com.trevorism:datastore-client:3.2.0'){
-        exclude module:"slf4j-nop"
-    }
+    implementation 'com.trevorism:micronaut-utility-beans:1.6.0'
+    implementation 'com.trevorism:datastore-client:4.0.0'
     implementation 'com.trevorism:reactions-client:0.6.0'
 
     runtimeOnly("ch.qos.logback:logback-classic")
@@ -96,7 +91,7 @@ appengine {
     stage.artifact = layout.buildDirectory.file("libs/${project.name}-all.jar")
     deploy {
         projectId = "trevorism-testing"
-        version = "0-9-5"
+        version = "1-0-0"
         stopPreviousVersion = true
         promote = true
     }

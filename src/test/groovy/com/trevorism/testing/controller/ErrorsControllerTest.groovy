@@ -1,8 +1,12 @@
 package com.trevorism.testing.controller
 
 import com.trevorism.data.Repository
+import com.trevorism.https.AppClientSecureHttpClient
 import com.trevorism.testing.model.TestError
 import org.junit.jupiter.api.Test
+
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 class ErrorsControllerTest {
 
@@ -16,7 +20,7 @@ class ErrorsControllerTest {
     @Test
     void testCleanErrors(){
         ErrorsController ec = new ErrorsController()
-        ec.errorRepository = [list:{}] as Repository<TestError>
+        ec.errorRepository = [filter:{cf -> []}] as Repository<TestError>
         assert !ec.cleanOldErrors()
     }
 
@@ -47,5 +51,6 @@ class ErrorsControllerTest {
         ec.errorRepository = [delete:{ it -> new TestError()}] as Repository<TestError>
         assert ec.removeError("4")
     }
+
 }
 

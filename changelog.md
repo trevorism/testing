@@ -1,3 +1,7 @@
+# 1.0.0
+
+Update dependencies to latest versions. Add permissions to endpoints.
+
 # 0.9.5
 
 Fix bug when no metadata exists.

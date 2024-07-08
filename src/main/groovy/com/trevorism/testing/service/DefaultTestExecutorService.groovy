@@ -53,7 +53,11 @@ class DefaultTestExecutorService implements TestExecutorService {
             return null
         }
 
-        ComplexFilter complexFilter = new FilterBuilder().addFilter(new SimpleFilter("source", "=", testEvent.service), new SimpleFilter("kind", "=", testEvent.kind)).build()
+        ComplexFilter complexFilter = new FilterBuilder().addFilter(
+                new SimpleFilter("source", "=", testEvent.service),
+                new SimpleFilter("kind", "=", testEvent.kind))
+                .build()
+
         TestSuite suite = testSuiteRepository.filter(complexFilter).first()
         if (!suite) {
             log.warn("No test suite found for event ${testEvent.kind}_${testEvent.service}")
