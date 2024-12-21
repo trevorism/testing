@@ -73,7 +73,7 @@ class DefaultTestExecutorService implements TestExecutorService {
 
         suite.lastRunDate = testEvent.date
         suite.lastRunSuccess = testEvent.success
-        suite.lastRuntimeSeconds = (long) (testEvent.durationMillis / 1000)
+        suite.lastRuntimeSeconds = (int) (testEvent.durationMillis / 1000)
 
         log.debug("Updating test suite ${suite.id} with lastRunDate: ${suite.lastRunDate} to lastRunSuccess: ${suite.lastRunSuccess}")
 
