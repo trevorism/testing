@@ -1,6 +1,7 @@
 package com.trevorism.testing.service
 
-
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.trevorism.data.FastDatastoreRepository
 import com.trevorism.data.Repository
 import com.trevorism.data.model.filtering.ComplexFilter
@@ -12,6 +13,7 @@ import com.trevorism.testing.model.TestError
 import com.trevorism.testing.model.TestEvent
 import com.trevorism.testing.model.TestMetadata
 import com.trevorism.testing.model.TestSuite
+import com.trevorism.testing.model.TestSuiteKind
 import com.trevorism.testing.model.WorkflowRequest
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -21,12 +23,14 @@ class DefaultTestExecutorService implements TestExecutorService {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultTestExecutorService)
     private GithubClient githubClient
+    private Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create()
     private Repository<TestSuite> testSuiteRepository
     private Repository<TestError> errorRepository
     private TestMetadataService testMetadataService
+    private SecureHttpClient appClientSecureHttpClient
 
     DefaultTestExecutorService() {
-        SecureHttpClient appClientSecureHttpClient = new AppClientSecureHttpClient()
+        appClientSecureHttpClient = new AppClientSecureHttpClient()
         githubClient = new DefaultGithubClient(appClientSecureHttpClient)
         testSuiteRepository = new FastDatastoreRepository<>(TestSuite, appClientSecureHttpClient)
         errorRepository = new FastDatastoreRepository<>(TestError, appClientSecureHttpClient)
@@ -42,8 +46,11 @@ class DefaultTestExecutorService implements TestExecutorService {
             return false
         }
 
-        boolean result = githubClient.invokeWorkflow(testSuite.source, new WorkflowRequest(workflowInputs: ["TEST_TYPE": testType]))
-        return result
+        if(testType == TestSuiteKind.WEB.name().toLowerCase()){
+            return invokeWebTest(testSuite)
+        }
+
+        return githubClient.invokeWorkflow(testSuite.source, new WorkflowRequest(workflowInputs: ["TEST_TYPE": testType]))
     }
 
     @Override
@@ -84,5 +91,12 @@ class DefaultTestExecutorService implements TestExecutorService {
         return updated
     }
 
-
+    private boolean invokeWebTest(TestSuite testSuite) {
+        String source = testSuite.source
+        String json = gson.toJson(testSuite)
+        String response = appClientSecureHttpClient.post("https://${source}.testing.trevorism.com/test", json)
+        TestEvent testResult = gson.fromJson(response, TestEvent)
+        updateTestSuiteFromEvent(testResult)
+        return testResult.success
+    }
 }

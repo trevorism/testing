@@ -1,3 +1,7 @@
+# 1.1.0
+
+Support the web test type by making a POST request to https://<source>.testing.trevorism.com/test.
+
 # 1.0.0
 
 Update dependencies to latest versions. Add permissions to endpoints.
