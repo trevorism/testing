@@ -65,7 +65,7 @@ class DefaultTestExecutorService implements TestExecutorService {
                 new SimpleFilter("kind", "=", testEvent.kind))
                 .build()
 
-        TestSuite suite = testSuiteRepository.filter(complexFilter).first()
+        TestSuite suite = testSuiteRepository.filter(complexFilter)?.first()
         if (!suite) {
             log.warn("No test suite found for event ${testEvent.kind}_${testEvent.service}")
             return null
