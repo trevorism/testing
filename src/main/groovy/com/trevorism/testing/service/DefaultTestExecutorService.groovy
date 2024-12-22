@@ -9,12 +9,7 @@ import com.trevorism.data.model.filtering.FilterBuilder
 import com.trevorism.data.model.filtering.SimpleFilter
 import com.trevorism.https.AppClientSecureHttpClient
 import com.trevorism.https.SecureHttpClient
-import com.trevorism.testing.model.TestError
-import com.trevorism.testing.model.TestEvent
-import com.trevorism.testing.model.TestMetadata
-import com.trevorism.testing.model.TestSuite
-import com.trevorism.testing.model.TestSuiteKind
-import com.trevorism.testing.model.WorkflowRequest
+import com.trevorism.testing.model.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -41,12 +36,12 @@ class DefaultTestExecutorService implements TestExecutorService {
     boolean executeTestSuite(TestSuite testSuite) {
         String testType = testSuite.kind.toLowerCase()
         TestMetadata metadata = testMetadataService.getMetadataByTestSuiteId(testSuite.id)
-        if(metadata && metadata.disabled){
+        if (metadata && metadata.disabled) {
             log.info("Test suite ${testSuite.id} is disabled")
             return false
         }
 
-        if(testType == TestSuiteKind.WEB.name().toLowerCase()){
+        if (testType == TestSuiteKind.WEB.name().toLowerCase()) {
             return invokeWebTest(testSuite)
         }
 
@@ -55,7 +50,7 @@ class DefaultTestExecutorService implements TestExecutorService {
 
     @Override
     TestSuite updateTestSuiteFromEvent(TestEvent testEvent) {
-        if(!testEvent.service || !testEvent.kind) {
+        if (!testEvent.service || !testEvent.kind) {
             log.warn("Test event is missing service or kind")
             return null
         }
@@ -65,12 +60,13 @@ class DefaultTestExecutorService implements TestExecutorService {
                 new SimpleFilter("kind", "=", testEvent.kind))
                 .build()
 
-        TestSuite suite = testSuiteRepository.filter(complexFilter)?.first()
-        if (!suite) {
+        def suites = testSuiteRepository.filter(complexFilter)
+        if (!suites) {
             log.warn("No test suite found for event ${testEvent.kind}_${testEvent.service}")
             return null
         }
 
+        TestSuite suite = suites.first()
         suite.lastRunDate = testEvent.date
         suite.lastRunSuccess = testEvent.success
         suite.lastRuntimeSeconds = (int) (testEvent.durationMillis / 1000)
@@ -78,10 +74,9 @@ class DefaultTestExecutorService implements TestExecutorService {
         log.debug("Updating test suite ${suite.id} with lastRunDate: ${suite.lastRunDate} to lastRunSuccess: ${suite.lastRunSuccess}")
 
         TestSuite updated = testSuiteRepository.update(suite.id, suite)
-        if(!updated.lastRunSuccess)
-        {
+        if (!updated.lastRunSuccess) {
             TestMetadata metadata = testMetadataService.getMetadataByTestSuiteId(suite.id)
-            if(metadata && (metadata.shouldFail || metadata.disabled)){
+            if (metadata && (metadata.shouldFail || metadata.disabled)) {
                 log.info("Test suite ${suite.id} is supposed to fail or is disabled")
                 return updated
             }
