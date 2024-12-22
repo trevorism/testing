@@ -42,7 +42,13 @@ class DefaultTestExecutorService implements TestExecutorService {
         }
 
         if (testType == TestSuiteKind.WEB.name().toLowerCase()) {
-            return invokeWebTest(testSuite)
+            try {
+                invokeWebTest(testSuite)
+                return true
+            } catch (Exception e) {
+                log.error("Failed to execute web test", e)
+                return false
+            }
         }
 
         return githubClient.invokeWorkflow(testSuite.source, new WorkflowRequest(workflowInputs: ["TEST_TYPE": testType]))
@@ -86,12 +92,11 @@ class DefaultTestExecutorService implements TestExecutorService {
         return updated
     }
 
-    private boolean invokeWebTest(TestSuite testSuite) {
+    private void invokeWebTest(TestSuite testSuite) {
         String source = testSuite.source
         String json = gson.toJson(testSuite)
         String response = appClientSecureHttpClient.post("https://${source}.testing.trevorism.com/test", json)
         TestEvent testResult = gson.fromJson(response, TestEvent)
         updateTestSuiteFromEvent(testResult)
-        return testResult.success
     }
 }
