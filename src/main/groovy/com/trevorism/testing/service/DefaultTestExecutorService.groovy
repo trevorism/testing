@@ -7,6 +7,8 @@ import com.trevorism.data.Repository
 import com.trevorism.data.model.filtering.ComplexFilter
 import com.trevorism.data.model.filtering.FilterBuilder
 import com.trevorism.data.model.filtering.SimpleFilter
+import com.trevorism.event.DefaultEventClient
+import com.trevorism.event.EventClient
 import com.trevorism.https.AppClientSecureHttpClient
 import com.trevorism.https.SecureHttpClient
 import com.trevorism.testing.model.*
@@ -22,6 +24,7 @@ class DefaultTestExecutorService implements TestExecutorService {
     private Repository<TestSuite> testSuiteRepository
     private Repository<TestError> errorRepository
     private TestMetadataService testMetadataService
+    private EventClient<TestEvent> eventClient
     private SecureHttpClient appClientSecureHttpClient
 
     DefaultTestExecutorService() {
@@ -30,6 +33,7 @@ class DefaultTestExecutorService implements TestExecutorService {
         testSuiteRepository = new FastDatastoreRepository<>(TestSuite, appClientSecureHttpClient)
         errorRepository = new FastDatastoreRepository<>(TestError, appClientSecureHttpClient)
         testMetadataService = new DefaultTestMetadataService(appClientSecureHttpClient)
+        eventClient = new DefaultEventClient(appClientSecureHttpClient)
     }
 
     @Override
@@ -96,7 +100,7 @@ class DefaultTestExecutorService implements TestExecutorService {
         String source = testSuite.source
         String json = gson.toJson(testSuite)
         String response = appClientSecureHttpClient.post("https://${source}.testing.trevorism.com/test", json)
-        TestEvent testResult = gson.fromJson(response, TestEvent)
-        updateTestSuiteFromEvent(testResult)
+        TestEvent testEvent = gson.fromJson(response, TestEvent)
+        eventClient.sendEvent("testResult", testEvent)
     }
 }

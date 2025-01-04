@@ -1,3 +1,7 @@
+# 1.2.0
+
+Send a test event which will eventually update the test suite instead of updating the test suite directly.
+
 # 1.1.0
 
 Support the web test type by making a POST request to https://<source>.testing.trevorism.com/test.
