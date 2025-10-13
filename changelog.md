@@ -1,3 +1,7 @@
+# 1.3.0
+
+Update dependencies, move to java 21
+
 # 1.2.0
 
 Send a test event which will eventually update the test suite instead of updating the test suite directly.
