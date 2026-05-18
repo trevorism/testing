@@ -83,7 +83,8 @@ class ErrorsController {
     @Secure(value = Roles.USER, allowInternal = true, permissions = "RE")
     @Get(value = "/alert", produces = MediaType.APPLICATION_JSON)
     boolean checkForErrors() {
-        def list = errorRepository.list()
+        Date threshold = Date.from(Instant.now().minus(7, ChronoUnit.DAYS))
+        def list = errorRepository.filter(new SimpleFilter("date", ">", threshold))
         if (list) {
             AlertClient alertClient = new AlertClient(secureHttpClient)
             String body = "There are ${list.size()} errors to resolve."
