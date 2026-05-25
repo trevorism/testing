@@ -84,14 +84,19 @@ class DefaultTestExecutorService implements TestExecutorService {
         log.debug("Updating test suite ${suite.id} with lastRunDate: ${suite.lastRunDate} to lastRunSuccess: ${suite.lastRunSuccess}")
 
         TestSuite updated = testSuiteRepository.update(suite.id, suite)
+
+        log.debug("Updated test suite ${updated.id} with lastRunDate: ${updated.lastRunDate} to lastRunSuccess: ${updated.lastRunSuccess} for numberOfTests: ${testEvent.numberOfTests}")
+
         if (!updated.lastRunSuccess) {
             TestMetadata metadata = testMetadataService.getMetadataByTestSuiteId(suite.id)
             if (metadata && (metadata.shouldFail || metadata.disabled)) {
                 log.info("Test suite ${suite.id} is supposed to fail or is disabled")
                 return updated
             }
-            TestError error = new TestError(source: suite.source, message: "Test suite run failed", date: testEvent.date, details: [kind: testEvent.kind])
-            errorRepository.create(error)
+            if (testEvent.numberOfTests > 0) {
+                TestError error = new TestError(source: suite.source, message: "Test suite run failed", date: testEvent.date, details: [kind: testEvent.kind])
+                errorRepository.create(error)
+            }
         }
         return updated
     }
