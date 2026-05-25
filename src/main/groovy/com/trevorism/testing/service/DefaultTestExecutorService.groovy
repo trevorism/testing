@@ -81,11 +81,8 @@ class DefaultTestExecutorService implements TestExecutorService {
         suite.lastRunSuccess = testEvent.success
         suite.lastRuntimeSeconds = (int) (testEvent.durationMillis / 1000)
 
-        log.debug("Updating test suite ${suite.id} with lastRunDate: ${suite.lastRunDate} to lastRunSuccess: ${suite.lastRunSuccess}")
-
+        log.debug("Updating test suite ${suite.id} with lastRunDate: ${suite.lastRunDate} to lastRunSuccess: ${suite.lastRunSuccess} with number of tests: ${testEvent.numberOfTests} and runtime seconds: ${suite.lastRuntimeSeconds}")
         TestSuite updated = testSuiteRepository.update(suite.id, suite)
-
-        log.debug("Updated test suite ${updated.id} with lastRunDate: ${updated.lastRunDate} to lastRunSuccess: ${updated.lastRunSuccess} for numberOfTests: ${testEvent.numberOfTests}")
 
         if (!updated.lastRunSuccess) {
             TestMetadata metadata = testMetadataService.getMetadataByTestSuiteId(suite.id)
@@ -93,12 +90,11 @@ class DefaultTestExecutorService implements TestExecutorService {
                 log.info("Test suite ${suite.id} is supposed to fail or is disabled")
                 return updated
             }
-            if (testEvent.numberOfTests > 0) {
-                TestError error = new TestError(source: suite.source, message: "Test suite run failed", date: testEvent.date, details: [kind: testEvent.kind])
-                errorRepository.create(error)
-            }
+            TestError error = new TestError(source: suite.source, message: "Test suite run failed", date: testEvent.date, details: [kind: testEvent.kind])
+            errorRepository.create(error)
         }
         return updated
+
     }
 
     private void invokeWebTest(TestSuite testSuite) {
