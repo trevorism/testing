@@ -81,9 +81,12 @@ class DefaultTestExecutorService implements TestExecutorService {
         suite.lastRunSuccess = testEvent.success
         suite.lastRuntimeSeconds = (int) (testEvent.durationMillis / 1000)
 
-        log.debug("Updating test suite ${suite.id} with lastRunDate: ${suite.lastRunDate} to lastRunSuccess: ${suite.lastRunSuccess} for numberOfTests: ${testEvent.numberOfTests}")
+        log.debug("Updating test suite ${suite.id} with lastRunDate: ${suite.lastRunDate} to lastRunSuccess: ${suite.lastRunSuccess}")
 
         TestSuite updated = testSuiteRepository.update(suite.id, suite)
+
+        log.debug("Updated test suite ${updated.id} with lastRunDate: ${updated.lastRunDate} to lastRunSuccess: ${updated.lastRunSuccess} for numberOfTests: ${testEvent.numberOfTests}")
+
         if (!updated.lastRunSuccess) {
             TestMetadata metadata = testMetadataService.getMetadataByTestSuiteId(suite.id)
             if (metadata && (metadata.shouldFail || metadata.disabled)) {
