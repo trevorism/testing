@@ -1,6 +1,8 @@
 # 1.4.0
 
-Fix bug where passing web tests that take minutes to complete would still create an error entry. Only create errors when numberOfTests > 0, indicating the test actually completed with results.
+- Fix bug where passing web tests that take minutes to complete would still create an error entry. Only create errors when numberOfTests > 0, indicating the test actually completed with results.
+- Upgrade Micronaut to 5.0.0, Gradle shadow plugin to 9.4.1, Gson to 2.14.0, App Engine plugin to 2.8.7
+- Upgrade runtime to Java 25
 
 # 1.3.0
 
