@@ -90,8 +90,10 @@ class DefaultTestExecutorService implements TestExecutorService {
                 log.info("Test suite ${suite.id} is supposed to fail or is disabled")
                 return updated
             }
-            TestError error = new TestError(source: suite.source, message: "Test suite run failed", date: testEvent.date, details: [kind: testEvent.kind])
-            errorRepository.create(error)
+            if (testEvent.numberOfTests > 0) {
+                TestError error = new TestError(source: suite.source, message: "Test suite run failed", date: testEvent.date, details: [kind: testEvent.kind])
+                errorRepository.create(error)
+            }
         }
         return updated
     }

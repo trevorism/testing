@@ -1,3 +1,7 @@
+# 1.4.0
+
+Fix bug where passing web tests that take minutes to complete would still create an error entry. Only create errors when numberOfTests > 0, indicating the test actually completed with results.
+
 # 1.3.0
 
 Update dependencies, move to java 21
