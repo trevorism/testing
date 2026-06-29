@@ -13,7 +13,7 @@ class ErrorsControllerTest {
     @Test
     void testCheckForErrors(){
         ErrorsController ec = new ErrorsController()
-        ec.errorRepository = [list:{}] as Repository<TestError>
+        ec.errorRepository = [list:{}, filter:{ sf -> []}] as Repository<TestError>
         assert !ec.checkForErrors()
     }
 
@@ -53,4 +53,3 @@ class ErrorsControllerTest {
     }
 
 }
-
