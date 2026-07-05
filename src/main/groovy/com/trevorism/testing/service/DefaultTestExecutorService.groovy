@@ -72,7 +72,13 @@ class DefaultTestExecutorService implements TestExecutorService {
 
         def suites = testSuiteRepository.filter(complexFilter)
         if (!suites) {
-            log.warn("No test suite found for event ${testEvent.kind}_${testEvent.service}")
+            log.warn("No test suite registered for service '${testEvent.service}' kind '${testEvent.kind}'")
+            errorRepository.create(new TestError(
+                    source: testEvent.service,
+                    message: "No '${testEvent.kind}' test suite is registered for '${testEvent.service}'. Register one so its results are tracked.",
+                    date: testEvent.date ?: new Date(),
+                    details: [reason: "unregistered-suite", service: testEvent.service, kind: testEvent.kind,
+                              success: testEvent.success, numberOfTests: testEvent.numberOfTests]))
             return null
         }
 

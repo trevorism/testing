@@ -7,6 +7,7 @@ import com.trevorism.testing.model.TestEvent
 import com.trevorism.testing.model.TestSuite
 import com.trevorism.testing.service.TestExecutorService
 import com.trevorism.testing.service.TestSuiteService
+import io.micronaut.http.HttpResponse
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.*
 import io.swagger.v3.oas.annotations.Operation
@@ -76,8 +77,8 @@ class TestSuiteController {
     @Tag(name = "Test Suite Operations")
     @Operation(summary = "Updates test suite based on last execution")
     @Post(value = "/update/webhook", produces = MediaType.APPLICATION_JSON, consumes = MediaType.APPLICATION_JSON)
-    TestSuite updateTestSuite(@Body TestEvent testEvent) {
+    HttpResponse<TestSuite> updateTestSuite(@Body TestEvent testEvent) {
         TestSuite updated = testExecutorService.updateTestSuiteFromEvent(testEvent)
-        return updated
+        return HttpResponse.ok(updated)
     }
 }

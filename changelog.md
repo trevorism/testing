@@ -1,3 +1,7 @@
+# 1.5.0
+
+Upgrade micronaut to 5.0.2; fix issue with missing test suites reporting suboptimal errors.
+
 # 1.4.0
 
 - Fix bug where passing web tests that take minutes to complete would still create an error entry. Only create errors when numberOfTests > 0, indicating the test actually completed with results.

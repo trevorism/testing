@@ -80,4 +80,26 @@ class DefaultTestExecutorServiceTest {
         assert errorCount == 1
     }
 
+    @Test
+    void testDescriptiveErrorCreatedWhenNoSuiteRegistered() {
+        DefaultTestExecutorService testExecutorService = new DefaultTestExecutorService()
+        TestError created = null
+
+        setField(testExecutorService, "testSuiteRepository", [filter: { cf -> [] }] as Repository<TestSuite>)
+        setField(testExecutorService, "errorRepository", [create: { e -> created = e; e }] as Repository<TestError>)
+
+        TestEvent event = new TestEvent(service: "health-dash", kind: "cucumber", success: true, numberOfTests: 8, date: new Date())
+        def result = testExecutorService.updateTestSuiteFromEvent(event)
+
+        assert result == null
+        assert created != null
+        assert created.source == "health-dash"
+        assert created.message.contains("cucumber")
+        assert created.message.contains("health-dash")
+        assert created.details.reason == "unregistered-suite"
+        assert created.details.kind == "cucumber"
+        assert created.details.success
+        assert created.details.numberOfTests == 8
+    }
+
 }
