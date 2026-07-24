@@ -10,11 +10,13 @@ import io.cucumber.groovy.Hooks
 this.metaClass.mixin(Hooks)
 this.metaClass.mixin(EN)
 
+String baseUrl = System.getenv("ACCEPTANCE_BASE_URL") ?: "https://testing.trevorism.com"
+
 def responseObjects
 
 When(/the list of test suites is requested/) {  ->
     SecureHttpClient secureHttpClient = new AppClientSecureHttpClient()
-    String responseJson = secureHttpClient.get("https://testing.trevorism.com/api/suite")
+    String responseJson = secureHttpClient.get("${baseUrl}/api/suite")
     Gson gson = new Gson()
     responseObjects = gson.fromJson(responseJson, List.class)
 }
