@@ -110,6 +110,10 @@ class DefaultTestExecutorService implements TestExecutorService {
         String json = gson.toJson(testSuite)
         String response = appClientSecureHttpClient.post("https://${source}.testing.trevorism.com/test", json)
         TestEvent testEvent = gson.fromJson(response, TestEvent)
+        if (!testEvent?.service || !testEvent?.kind) {
+            log.info("Web test for ${source} started without a verdict; it will report its own testResult")
+            return
+        }
         eventClient.sendEvent("testResult", testEvent)
     }
 }

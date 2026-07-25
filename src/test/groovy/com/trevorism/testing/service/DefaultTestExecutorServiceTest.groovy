@@ -1,6 +1,8 @@
 package com.trevorism.testing.service
 
 import com.trevorism.data.Repository
+import com.trevorism.event.EventClient
+import com.trevorism.https.SecureHttpClient
 import com.trevorism.testing.model.TestError
 import com.trevorism.testing.model.TestEvent
 import com.trevorism.testing.model.TestMetadata
@@ -102,4 +104,35 @@ class DefaultTestExecutorServiceTest {
         assert created.details.numberOfTests == 8
     }
 
+    @Test
+    void testWebTestVerdictIsPublished() {
+        List<TestEvent> sent = []
+        TestExecutorService testExecutorService = webExecutor(
+                '{"service":"event-tester","kind":"web","success":true,"numberOfTests":6}', sent)
+
+        assert testExecutorService.executeTestSuite(
+                new TestSuite(id: "5071251278135296", name: "web_event-tester", source: "event-tester", kind: "web"))
+        assert sent.size() == 1
+        assert sent.first().service == "event-tester"
+        assert sent.first().success
+    }
+
+    @Test
+    void testWebTestWithoutAVerdictIsNotPublished() {
+        List<TestEvent> sent = []
+        TestExecutorService testExecutorService = webExecutor(
+                '{"success":false,"numberOfTests":0,"durationMillis":12}', sent)
+
+        assert testExecutorService.executeTestSuite(
+                new TestSuite(id: "5958628024516608", name: "web_prompt-tester", source: "prompt-tester", kind: "web"))
+        assert sent.isEmpty()
+    }
+
+    private static TestExecutorService webExecutor(String response, List<TestEvent> sent) {
+        TestExecutorService testExecutorService = new DefaultTestExecutorService()
+        setField(testExecutorService, "testMetadataService", { id -> new TestMetadata(disabled: false) } as TestMetadataService)
+        setField(testExecutorService, "appClientSecureHttpClient", [post: { String url, String body -> response }] as SecureHttpClient)
+        setField(testExecutorService, "eventClient", [sendEvent: { String topic, TestEvent event -> sent << event; "" }] as EventClient)
+        return testExecutorService
+    }
 }
