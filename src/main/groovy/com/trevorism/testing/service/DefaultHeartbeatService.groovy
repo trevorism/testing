@@ -16,7 +16,7 @@ class DefaultHeartbeatService implements HeartbeatService {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultHeartbeatService)
     private static final int MAX_AGE_HOURS = 192
-    private static final List<String> MONITORED_SUITE_NAMES = [
+    static final List<String> MONITORED_SUITE_NAMES = [
             "web_event-tester",
             "web_expiration-tester",
             "acceptance_auth-provider",
@@ -24,15 +24,24 @@ class DefaultHeartbeatService implements HeartbeatService {
             "acceptance_github",
             "acceptance_list",
             "acceptance_schedule"
-    ]
+    ].asImmutable()
 
     private PropertiesProvider propertiesProvider = new ClasspathBasedPropertiesProvider()
     private TestSuiteService testSuiteService
     private HttpClient httpClient = new BlankHttpClient()
-    private String pingUrl = propertiesProvider.getProperty("apiKey")
+    private String pingUrl = readPingUrl()
 
     DefaultHeartbeatService(TestSuiteService testSuiteService) {
         this.testSuiteService = testSuiteService
+    }
+
+    private String readPingUrl() {
+        try {
+            return propertiesProvider.getProperty("apiKey")
+        } catch (Exception e) {
+            log.warn("Unable to read the heartbeat ping url", e)
+            return null
+        }
     }
 
     @Override

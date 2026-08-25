@@ -9,70 +9,65 @@ import java.time.temporal.ChronoUnit
 
 class DefaultHeartbeatServiceTest {
 
-    private static final List<String> MONITORED_SUITE_NAMES = [
-            "web_event-tester",
-            "web_expiration-tester",
-            "acceptance_auth-provider",
-            "acceptance_data",
-            "acceptance_github",
-            "acceptance_list",
-            "acceptance_schedule"
-    ]
-
     private List<String> pingedUrls = []
 
     @Test
-    void testFreshSuitesPingSuccess() {
-        DefaultHeartbeatService service = createService(allMonitoredSuites(hoursAgo(100)))
-
-        assert service.checkSuiteFreshness()
-        assert pingedUrls == ["https://ping.test/uuid"]
-    }
-
-    @Test
-    void testStaleSuitePingsFailure() {
-        List<TestSuite> suites = allMonitoredSuites(hoursAgo(100))
-        suites.last().lastRunDate = hoursAgo(400)
-        DefaultHeartbeatService service = createService(suites)
-
-        assert !service.checkSuiteFreshness()
-        assert pingedUrls == ["https://ping.test/uuid/fail"]
+    void testFreshSuitesAreFresh() {
+        assert createService(allMonitoredSuites(hoursAgo(100))).checkSuiteFreshness()
     }
 
     @Test
     void testSuiteAtTheEdgeOfTheWindowIsFresh() {
-        DefaultHeartbeatService service = createService(allMonitoredSuites(hoursAgo(191)))
-
-        assert service.checkSuiteFreshness()
+        assert createService(allMonitoredSuites(hoursAgo(191))).checkSuiteFreshness()
     }
 
     @Test
-    void testSuiteWithoutRunDatePingsFailure() {
+    void testStaleSuiteIsNotFresh() {
+        List<TestSuite> suites = allMonitoredSuites(hoursAgo(100))
+        suites.last().lastRunDate = hoursAgo(400)
+
+        assert !createService(suites).checkSuiteFreshness()
+    }
+
+    @Test
+    void testSuiteWithoutRunDateIsNotFresh() {
         List<TestSuite> suites = allMonitoredSuites(hoursAgo(100))
         suites.first().lastRunDate = null
-        DefaultHeartbeatService service = createService(suites)
 
-        assert !service.checkSuiteFreshness()
-        assert pingedUrls == ["https://ping.test/uuid/fail"]
+        assert !createService(suites).checkSuiteFreshness()
     }
 
     @Test
-    void testUnregisteredMonitoredSuitePingsFailure() {
+    void testUnregisteredMonitoredSuiteIsNotFresh() {
         List<TestSuite> suites = allMonitoredSuites(hoursAgo(100))
         suites.remove(0)
-        DefaultHeartbeatService service = createService(suites)
 
-        assert !service.checkSuiteFreshness()
-        assert pingedUrls == ["https://ping.test/uuid/fail"]
+        assert !createService(suites).checkSuiteFreshness()
     }
 
     @Test
     void testUnmonitoredSuitesAreIgnored() {
         List<TestSuite> suites = allMonitoredSuites(hoursAgo(100))
         suites << new TestSuite(name: "unit_testing", kind: "unit", lastRunDate: hoursAgo(5000))
-        DefaultHeartbeatService service = createService(suites)
 
-        assert service.checkSuiteFreshness()
+        assert createService(suites).checkSuiteFreshness()
+    }
+
+    @Test
+    void testFreshSuitesPingSuccess() {
+        createService(allMonitoredSuites(hoursAgo(100))).checkSuiteFreshness()
+
+        assert pingedUrls == ["https://ping.invalid/uuid"]
+    }
+
+    @Test
+    void testStaleSuitesPingFailure() {
+        List<TestSuite> suites = allMonitoredSuites(hoursAgo(100))
+        suites.last().lastRunDate = hoursAgo(400)
+
+        createService(suites).checkSuiteFreshness()
+
+        assert pingedUrls == ["https://ping.invalid/uuid/fail"]
     }
 
     @Test
@@ -94,13 +89,15 @@ class DefaultHeartbeatServiceTest {
 
     private DefaultHeartbeatService createService(List<TestSuite> suites) {
         DefaultHeartbeatService service = new DefaultHeartbeatService([list: { suites }] as TestSuiteService)
-        service.@pingUrl = "https://ping.test/uuid"
+        service.@pingUrl = "https://ping.invalid/uuid"
         service.@httpClient = [get: { String url -> pingedUrls << url; "OK" }] as HttpClient
         return service
     }
 
     private static List<TestSuite> allMonitoredSuites(Date lastRunDate) {
-        MONITORED_SUITE_NAMES.collect { new TestSuite(name: it, kind: "web", source: it, lastRunDate: lastRunDate) }
+        DefaultHeartbeatService.MONITORED_SUITE_NAMES.collect {
+            new TestSuite(name: it, kind: "web", source: it, lastRunDate: lastRunDate)
+        }
     }
 
     private static Date hoursAgo(int hours) {
