@@ -1,4 +1,8 @@
-# 1.5.0
+# 1.6.0
+
+Add a monitoring endpoint via healthchecks.io. The full url is a secret stored in `apiKey`. 
+
+ # 1.5.0
 
 Upgrade micronaut to 5.0.2; fix issue with missing test suites reporting suboptimal errors.
 
