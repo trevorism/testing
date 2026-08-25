@@ -1,80 +1,84 @@
-# 1.5.0
+## 1.6.0
+
+Add a monitoring endpoint via healthchecks.io. The full url is a secret stored in `apiKey`. 
+
+## 1.5.0
 
 Upgrade micronaut to 5.0.2; fix issue with missing test suites reporting suboptimal errors.
 
-# 1.4.0
+## 1.4.0
 
 - Fix bug where passing web tests that take minutes to complete would still create an error entry. Only create errors when numberOfTests > 0, indicating the test actually completed with results.
 - Upgrade Micronaut to 5.0.0, Gradle shadow plugin to 9.4.1, Gson to 2.14.0, App Engine plugin to 2.8.7
 - Upgrade runtime to Java 25
 
-# 1.3.0
+## 1.3.0
 
 Update dependencies, move to java 21
 
-# 1.2.0
+## 1.2.0
 
 Send a test event which will eventually update the test suite instead of updating the test suite directly.
 
-# 1.1.0
+## 1.1.0
 
 Support the web test type by making a POST request to https://<source>.testing.trevorism.com/test.
 
-# 1.0.0
+## 1.0.0
 
 Update dependencies to latest versions. Add permissions to endpoints.
 
-# 0.9.5
+## 0.9.5
 
 Fix bug when no metadata exists.
 
-# 0.9.4
+## 0.9.4
 
 Add testing metadata functionality. Metadata can disable or mark a test suite as 'shouldFail'.
 Disabled test suites will not run when invoked. Test suites marked as 'shouldFail' will run but will not create an error if they fail.
 
-# 0.9.3
+## 0.9.3
 
 Add an error when test runs are in failing state for daily notifications.
 
-# 0.9.2
+## 0.9.2
 
 Move the webhook to avoid conflicts with test invocation.
 
-# 0.9.1
+## 0.9.1
 
 Move to event based updating of test suites.
 
-# 0.9.0
+## 0.9.0
 
 Add a webhook for generic errors. Also updated micronaut and gradle dependencies.
 
-# 0.8.0
+## 0.8.0
 
 Update to latest micronaut and datastore utils. Update calling github service.
 
-# 0.7.1
+## 0.7.1
 
 Improve tests, logging and error handling. Require HTTPS
 
-# 0.7.0
+## 0.7.0
 
 Update to java 17, micronaut
 
-# 0.6.0
+## 0.6.0
 
 Remove concept of test suite details and added details into the test suite object.
 Added security to the endpoints.
 Schedule a check against github actions after test execution to update the test suite with additional data
 
-# 0.5.0
+## 0.5.0
 
 Have testing invoke github actions to run tests.
 
-# 0.4.0
+## 0.4.0
 
 Move to github actions and update dependencies
 
-# 0.3.0
+## 0.3.0
 
 Removed jenkins specific logic from this API
