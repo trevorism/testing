@@ -1,3 +1,7 @@
+## 1.7.0
+
+Upgrade Micronaut to 5.2.1, shadow plugin to 9.6.1, datastore-client to 4.2.1. Clean up PR environments without `pull_request_target`.
+
 ## 1.6.0
 
 Add a monitoring endpoint via healthchecks.io. The full url is a secret stored in `apiKey`. 
